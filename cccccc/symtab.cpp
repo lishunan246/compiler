@@ -4,6 +4,7 @@
 #include "symtab.h"
 #include "analyze.h"
 
+#include <iostream>
 #include <string>
 #include <map>
 
@@ -42,10 +43,10 @@ static int hash (char* key) {
 /*the hash table of variables*/
 static VariableList variableHashTable[SIZE];
 
-/*the hash table of types*/
-static TypeList typeHashTable[SIZE];
+// symbol map of type define
+static std::map<std::string, TypeList> typeMap;
 
-// maps of func and proc
+// symbol maps of func and proc
 static std::map<std::string, FuncList> funcMap;
 static std::map<std::string, ProcList> procMap;
 
@@ -267,42 +268,29 @@ int funcListInsert(TreeNode* funcHead) {
 
 /*insert line numbers and memory location into the type hash table*/
 void typeListAliaseInsert(char* name, char* aliase) {
-	int h = hash(name);
-	TypeList l = typeHashTable[h];
-	while((l != NULL) && (strcmp(name, l->name)))
-		l = l->next;
-	if(l != NULL) {
-		AliaseList t = l->aliaseSet;
-		while(t->next != NULL)
-			t = t->next;
-		t->next = (AliaseList) malloc(sizeof(struct AliaseListRec));
-		t->next->aliase = aliase;
-		t->next->next = NULL;
-	}
+    if (typeMap.count(std::string(name)) > 0) {
+        typeMap[std::string(name)]->aliaseSet->aliase = aliase;
+    } else {
+        std::cout << "Type doesn't exist" << std::endl;
+    }
 }
 
-void typeListInsert(char* name, ExpType type, int nestLevel, void* pAttr, int size) {
-	int h = hash(name);
-	TypeList l = typeHashTable[h];
-	TypeList tmp = l;
-	while((tmp != NULL) && (strcmp(name, tmp->name)))
-		tmp = tmp->next;
-	if(tmp == NULL || (strcmp(name, tmp->name)==0 && nestLevel>tmp->nestLevel)) { /*process with same nestlevel not yet in the table, insert to the list head*/
-		tmp = (TypeList) malloc(sizeof(struct TypeListRec));
-		tmp->name = name;
-		tmp->aliaseSet = NULL;
-		tmp->type = type;
-		tmp->nestLevel = nestLevel;
-		tmp->pAttr = pAttr;
-		tmp->size = size;
-		tmp->next = (l == NULL)? NULL:l;
-		typeHashTable[h] = tmp;
-	}
-
+void typeListInsert(char* name, ExpType type, int nestLevel,
+                    void* pAttr, int size) {
+    TypeList tmpType = (TypeList)malloc(sizeof(struct TypeListRec));
+    tmpType->name = name;
+    tmpType->aliaseSet = NULL;
+    tmpType->type = type;
+    tmpType->nestLevel = nestLevel;
+    tmpType->pAttr = pAttr;
+    tmpType->size = size;
+    tmpType->next = NULL;
+    typeMap[std::string(name)] = tmpType;
 }
 
 /*insert line numbers and memory location into the variable hash table*/
-void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* pAttr, int lineno, int baseLoc, int offset) {
+void varListInsert(char* name, ExpType type, int isConst, int nestLevel,
+                   void* pAttr, int lineno, int baseLoc, int offset) {
 	int h = hash(name);
 	VariableList l = variableHashTable[h];
 	VariableList tmp = l;
@@ -331,8 +319,6 @@ void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* p
 		t->next->next = NULL;
 	}
 }
-
-
 
 /*=======================定义对符号表的查找操作=================================*/
 
@@ -368,14 +354,11 @@ ProcList procListLookup(char* name) {
 
 /*typeListLookup returns the TypeList of that name or null if not found*/
 TypeList typeListLookup(char* name) {
-	int h = hash(name);
-	TypeList l = typeHashTable[h];
-	while((l != NULL) && (strcmp(name, l->name)))
-		l = l->next;
-	if(l == NULL)
-		return NULL;
-	else
-		return l;
+    if (typeMap.count(std::string(name)) > 0) {
+        return typeMap[std::string(name)];
+    }
+    return NULL;
+
 }
 
 /*array Lookup*/
@@ -435,7 +418,6 @@ void initScope() {
 	int i;
 	for(i=0; i<SIZE; i++) {
 		variableHashTable[i] = NULL;
-		typeHashTable[i] = NULL;
 	}
 }
 
@@ -455,7 +437,6 @@ int leaveScope() {
 	int i;
 	for(i=0; i<SIZE; i++) {
 		VariableList vl = variableHashTable[i];
-		TypeList tl = typeHashTable[i];
 
 		while(vl != NULL && vl->nestLevel >= tmp) {
 			ptr1 = (void*)vl;
@@ -469,19 +450,6 @@ int leaveScope() {
 			free((VariableList)ptr1);
 		}
 		variableHashTable[i] = vl;
-
-		while(tl != NULL && tl->nestLevel >= tmp) {
-			ptr1 = (void*)tl;
-			tl = tl->next;
-			ptr2 = (void*)(((TypeList)ptr1)->aliaseSet);
-			while((AliaseList)ptr2 != NULL) {
-				ptr3 = (void*)(((AliaseList)ptr2)->next);
-				free((AliaseList)ptr2);
-				ptr2 = ptr3;
-			}
-			free((VariableList)ptr1);
-		}
-		typeHashTable[i] = tl;
 	}
 	return retValue;
 }
