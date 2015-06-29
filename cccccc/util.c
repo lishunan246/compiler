@@ -33,7 +33,7 @@ void printToken(TokenType token, const char * tokenString){
             fprintf(listing,"write\n");break;
         case TOKEN_WRITELN:
             fprintf(listing,"writeln\n");break;
-            
+
 
         case TOKEN_EQUAL:   fprintf(listing,"=\n",tokenString);break;
         case TOKEN_UNEQUAL:   fprintf(listing,"<>\n",tokenString);break;
@@ -46,8 +46,8 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_MUL:     fprintf(listing,"*\n");break;
         case TOKEN_DIV:     fprintf(listing,"\\n");break;
         case TOKEN_OR:      fprintf(listing,"or\n");break;
-        case TOKEN_AND:     fprintf(listing,"and\n");break; 
-        case TOKEN_MOD:     fprintf(listing,"mod\n");break; 
+        case TOKEN_AND:     fprintf(listing,"and\n");break;
+        case TOKEN_MOD:     fprintf(listing,"mod\n");break;
 
         case TOKEN_LB:      fprintf(listing,"[\n");break;
         case TOKEN_RB:      fprintf(listing,"]\n");break;
@@ -85,7 +85,7 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_SQR: fprintf(listing,"sqr\n");break;
         case TOKEN_SQRT:fprintf(listing,"sqrt\n");break;
         case TOKEN_SUCC:fprintf(listing,"succ\n");break;
-        
+
         default:
             fprintf(listing,"Unknown token:%s\n",tokenString);
     }
@@ -100,7 +100,7 @@ TreeNode * newDeclNode(DeclKind kind){
         for(i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
-        t->nodekind=NODE_DECLARE;  
+        t->nodekind=NODE_DECLARE;
         t->kind.decl = kind;
         t->lineno=lineno;
     }
@@ -141,7 +141,7 @@ TreeNode * newExpNode(ExpKind kind){
     }
     return t;
 }
-    
+
 TreeNode * newOpExpNode(TreeNode * first, TreeNode * second, TokenType op){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
     int i;
@@ -171,7 +171,7 @@ TreeNode * newTypeNode(TypeKind type){
         for(i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
-        t->nodekind=NODE_TYPE;   
+        t->nodekind=NODE_TYPE;
         t->kind.type=type;
         t->lineno=lineno;
     }
@@ -212,7 +212,7 @@ char* copyString(char *s){
     if(s==NULL)
       return NULL;
     n=strlen(s)+1;
-    t=malloc(n);
+    t=(char*)malloc(n);
     if(t==NULL)
       fprintf(listing,"Out of memory error at line %d\n",lineno);
     else
@@ -221,7 +221,7 @@ char* copyString(char *s){
 }
 
 //used for printTree
-static indentno=0;
+static int indentno=0;
 #define INDENT indentno+=2
 #define UNINDENT indentno-=2
 
@@ -252,7 +252,7 @@ void printTree(TreeNode * tree){
                     default: fprintf(listing,"Unknown Statement type\n");break;
                 }
             break;
-        
+
             case(NODE_EXPRESSION):
                switch(tree->kind.exp){
                     case EXP_OP:
@@ -272,7 +272,7 @@ void printTree(TreeNode * tree){
                     default: fprintf(listing,"Unknown Expression type\n");
                 }
             break;
-        
+
             case(NODE_DECLARE):
                 switch(tree->kind.decl){
                     case DECL_ROUTINEHEAD: fprintf(listing,"Routine Head\n");break;
@@ -287,7 +287,7 @@ void printTree(TreeNode * tree){
                     case DECL_VAL_PARA:fprintf(listing,"val parameters:\n");break;
                 }
             break;
-            
+
             case(NODE_TYPE):
                 switch(tree->kind.type){
                     case TYPE_SIMPLE_SYS:

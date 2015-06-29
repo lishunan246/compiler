@@ -7,6 +7,8 @@
 #include "analyze.h"
 #include "symtab.h"
 
+int CG_main(TreeNode* pnode,char * ffname);
+
 void CGExpOp(TreeNode* pnode);
 void CGExpId(TreeNode* pnode);
 void CGExpConst(TreeNode* pnode);

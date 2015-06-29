@@ -60,7 +60,7 @@ string \".*\"
 "<="        {return TOKEN_LE;}
 "<"         {return TOKEN_LT;}
 "*"         {return TOKEN_MUL;}
-"/"        {return TOKEN_DIV;}
+"/"         {return TOKEN_DIV;}
 "mod"       {return TOKEN_MOD;}
 "and"       {return TOKEN_AND;}
 "not"       {return TOKEN_NOT;}
@@ -110,14 +110,3 @@ TokenType getToken(){
     }
     return currentToken;
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -8,7 +8,7 @@
 char filename[30] = "test2";
 FILE * source ;
 FILE * listing ;
-int TraceScan = True; 
+int TraceScan = True;
 int lineno=0;
 
 int main(){
@@ -18,10 +18,10 @@ int main(){
     TreeNode * syntaxTree;
  //   while(getToken()!=ENDFILE);
     syntaxTree = parse();
-    printTree(syntaxTree);  
+    printTree(syntaxTree);
 
 // caihua
-	CG_main(syntaxTree,"out.asm");
+	CG_main(syntaxTree, "out.asm");
 
     return 0;
 

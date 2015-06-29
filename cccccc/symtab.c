@@ -55,61 +55,61 @@ static int totalOffset[50];
 
 /*=========================定义对符号表的插入操作=================================*/
 
-/*build a new sub-bound type definition*/
+/*build a p sub-bound type definition*/
 SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
-	SubBoundDef new = (SubBoundDef) malloc(sizeof(struct SubBoundDefRec));
-	new->boundType = type;
+	SubBoundDef p = (SubBoundDef) malloc(sizeof(struct SubBoundDefRec));
+	p->boundType = type;
 	if(type == EXPTYPE_INT) {
-		new->LowerBound.i = *(int*)lower;
-		new->UpperBound.i = *(int*)upper;	
+		p->LowerBound.i = *(int*)lower;
+		p->UpperBound.i = *(int*)upper;
 	} else if(type == EXPTYPE_CHAR) {
-		new->LowerBound.c = *(char*)lower;
-		new->UpperBound.c = *(char*)upper;
+		p->LowerBound.c = *(char*)lower;
+		p->UpperBound.c = *(char*)upper;
 	} else if(type == EXPTYPE_SIMPLE_ENUM) {
-		new->LowerBound.m = (char*)lower;
-		new->UpperBound.m = (char*)upper;
+		p->LowerBound.m = (char*)lower;
+		p->UpperBound.m = (char*)upper;
 	}
 
-	return new;
+	return p;
 }
 
-/*build a new array definition*/
+/*build a p array definition*/
 ArrayDef newArrayDef(ExpType arrayType, ExpType boundType, void* lower, void* upper) {
-	ArrayDef new = (ArrayDef) malloc(sizeof(struct ArrayDefRec));
-	new->arrayType = arrayType;
-	new->subBound = newSubBoundDef(boundType, lower, upper);
+	ArrayDef p = (ArrayDef) malloc(sizeof(struct ArrayDefRec));
+	p->arrayType = arrayType;
+	p->subBound = newSubBoundDef(boundType, lower, upper);
 
-	return new;
+	return p;
 }
 
-/*build a new enum definition*/
+/*build a p enum definition*/
 EnumDef newEnumDef(char* mark) {
-	EnumDef new = (EnumDef) malloc(sizeof(struct EnumDefRec));
-	new->mark = mark;
-	new->next = NULL;
+	EnumDef p = (EnumDef) malloc(sizeof(struct EnumDefRec));
+	p->mark = mark;
+	p->next = NULL;
 
-	return new;
+	return p;
 }
 
 EnumDef insertEnumDef(EnumDef enumList, char* mark) {
 	while(enumList->next != NULL)
 		enumList = enumList->next;
 	enumList->next = newEnumDef(mark);
-	
-	return enumList->next; 
+
+	return enumList->next;
 }
 
-/*build a new type list node*/
+/*build a p type list node*/
 TypeList newTypeDef(char* name, ExpType type, int nestLevel, void* pAttr, int size) {
-	TypeList new = (TypeList) malloc(sizeof(struct TypeListRec));
-	new->name = name;
-	new->type = type;
-	new->nestLevel = nestLevel;
-	new->pAttr = pAttr;
-	new->size = size;
-	new->next = NULL;
+	TypeList p = (TypeList) malloc(sizeof(struct TypeListRec));
+	p->name = name;
+	p->type = type;
+	p->nestLevel = nestLevel;
+	p->pAttr = pAttr;
+	p->size = size;
+	p->next = NULL;
 
-	return new;
+	return p;
 }
 
 TypeList insertTypeDef(TypeList typeList, char* name, ExpType type, int nestLevel, void* pAttr, int size) {
@@ -120,33 +120,33 @@ TypeList insertTypeDef(TypeList typeList, char* name, ExpType type, int nestLeve
 	return typeList->next;
 }
 
-/*build a new record definition*/
+/*build a p record definition*/
 RecordDef newDefinedRecord(TypeList ptr) {
-	RecordDef new = (RecordDef) malloc(sizeof(struct RecordNodeRec));
-	new->type = DEFINED;
-	new->ptr.pDef = ptr;
-	new->next = NULL;
+	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
+	p->type = DEFINED;
+	p->ptr.pDef = ptr;
+	p->next = NULL;
 
-	return new;
+	return p;
 }
 
 RecordDef newAnonyRecord(TypeList typeList) {
-	RecordDef new = (RecordDef) malloc(sizeof(struct RecordNodeRec));
-	new->type = ANONYMOUS;
-	new->ptr.pAnony = (void*) typeList;
-	new->next = NULL; 
+	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
+	p->type = ANONYMOUS;
+	p->ptr.pAnony = typeList;
+	p->next = NULL;
 
-	return new;
+	return p;
 }
 
 /*build a simple type list*/
 SimpleTypeList newSimpleTypeList(char* name, ExpType type, int isVar) {
-	SimpleTypeList new = (SimpleTypeList) malloc(sizeof(struct SimpleTypeListRec));
-	new->name = name;
-	new->type = type;
-	new->isVar = isVar;
-	
-	return new;
+	SimpleTypeList p = (SimpleTypeList) malloc(sizeof(struct SimpleTypeListRec));
+	p->name = name;
+	p->type = type;
+	p->isVar = isVar;
+
+	return p;
 }
 
 SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpType type, int isVar) {
@@ -191,11 +191,11 @@ int procListInsert(TreeNode* procHead) {
 
 			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
 			offset = offset + PARA_OFFSET_INC;
-			
+
 			tmpNode = tmpNode->sibling;
 		}
 	}
-	
+
 	int h = hash(name);
 	ProcList l = procHashTable[h];
 	ProcList tmp = l;
@@ -250,7 +250,7 @@ int funcListInsert(TreeNode* funcHead) {
 
 			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
 			offset = offset + PARA_OFFSET_INC;
-			
+
 			tmpNode = tmpNode->sibling;
 		}
 	}
@@ -315,7 +315,7 @@ void typeListInsert(char* name, ExpType type, int nestLevel, void* pAttr, int si
 }
 
 /*insert line numbers and memory location into the variable hash table*/
-void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* pAttr, int lineno, int baseLoc, int offset) { 
+void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* pAttr, int lineno, int baseLoc, int offset) {
 	int h = hash(name);
 	VariableList l = variableHashTable[h];
 	VariableList tmp = l;
@@ -325,7 +325,7 @@ void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* p
 		tmp = (VariableList) malloc(sizeof(struct VariableListRec));
 		tmp->name = name;
 		tmp->type = type;
-		tmp->isConst = isConst; 
+		tmp->isConst = isConst;
 		tmp->nestLevel = nestLevel;
 		tmp->pAttr = pAttr;
 		tmp->lines = (LineList) malloc(sizeof(struct LineListRec));
@@ -358,7 +358,7 @@ VariableList varListLookup(char* name) {
 	if(l == NULL)
 		return NULL;
 	else {
-		l->memloc.baseLoc = currentNestLevel - l->nestLevel; 
+		l->memloc.baseLoc = currentNestLevel - l->nestLevel;
 		return l;
 	}
 }
@@ -371,7 +371,7 @@ FuncList funcListLookup(char* name) {
 		l = l->next;
 	if(l == NULL)
 		return NULL;
-	else  
+	else
 		return l;
 }
 
@@ -414,7 +414,7 @@ LookupRet arrayLookup(char* a, int i) {
 			ret.totalOff = l->memloc.offset+OFFSET_INC*(i-lower);
 			ret.jumpLevel = currentNestLevel - l->nestLevel;
 			ret.type = l->type;
-		} 
+		}
 	}
 	return ret;
 }
@@ -430,9 +430,9 @@ LookupRet recordLookup(char* rec, char* a) {
 	ret.type = EXPTYPE_VOID;
 	if(l->type == EXPTYPE_RECORD && l->pAttr != NULL) {
 		if(((RecordDef)(l->pAttr))->type == ANONYMOUS) {
-			plist = ((RecordDef)(l->pAttr))->ptr.pAnony; 
+			plist = ((RecordDef)(l->pAttr))->ptr.pAnony;
 		} else {
-			plist = ((RecordDef)(l->pAttr))->ptr.pDef; 
+			plist = ((RecordDef)(l->pAttr))->ptr.pDef;
 		}
 		while(plist != NULL && strcmp(plist->name, a)) {
 			size += 1;
@@ -444,7 +444,7 @@ LookupRet recordLookup(char* rec, char* a) {
 			ret.type = plist->type;
 		}
 	}
-	return ret;	
+	return ret;
 }
 
 
@@ -462,7 +462,7 @@ void initScope() {
 	}
 }
 
-/*enter new function or process scope*/
+/*enter p function or process scope*/
 int enterNewScope(TreeNode* t) {
 	currentNestLevel += 1;
 	totalOffset[currentNestLevel] = buildSymtab(t);
@@ -555,6 +555,6 @@ void printSymTab(FILE* listing) {
 				l = l->next;
 			}
 		}
-	}	
-	
+	}
+
 }

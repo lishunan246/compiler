@@ -2223,15 +2223,3 @@ TokenType getToken(){
     }
     return currentToken;
 }
-
-
-
-
-
-
-
-
-
-
-
-

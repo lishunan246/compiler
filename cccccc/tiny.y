@@ -13,12 +13,19 @@ static int level=0;
 static int yylex(){
     return getToken();
 }
+
+int yyerror(char* message) {
+    fprintf(listing, "Syntax error at line %d: %s\n",lineno,message);
+   // printToken(yychar, tokenString);
+    return 0;
+}
+
 %}
 %token TOKEN_PROGRAM TOKEN_FUNCTION TOKEN_PROCEDURE TOKEN_CONST TOKEN_TYPE TOKEN_VAR
 %token TOKEN_IF TOKEN_THEN TOKEN_ELSE TOKEN_REPEAT TOKEN_UNTIL TOKEN_WHILE TOKEN_DO TOKEN_CASE TOKEN_TO TOKEN_DOWNTO TOKEN_FOR
 %token TOKEN_EQUAL TOKEN_UNEQUAL TOKEN_GE TOKEN_GT TOKEN_LE TOKEN_LT TOKEN_ASSIGN TOKEN_PLUS TOKEN_MINUS TOKEN_MUL TOKEN_DIV TOKEN_OR TOKEN_AND TOKEN_NOT TOKEN_MOD TOKEN_READ TOKEN_WRITE TOKEN_WRITELN
-%token TOKEN_LB TOKEN_RB TOKEN_SEMI TOKEN_DOT TOKEN_DOTDOT TOKEN_LP TOKEN_RP TOKEN_COMMA TOKEN_COLON 
-%token TOKEN_INTEGER_TYPE TOKEN_BOOLEAN_TYPE TOKEN_CHAR_TYPE TOKEN_REAL_TYPE 
+%token TOKEN_LB TOKEN_RB TOKEN_SEMI TOKEN_DOT TOKEN_DOTDOT TOKEN_LP TOKEN_RP TOKEN_COMMA TOKEN_COLON
+%token TOKEN_INTEGER_TYPE TOKEN_BOOLEAN_TYPE TOKEN_CHAR_TYPE TOKEN_REAL_TYPE
 %token TOKEN_TRUE TOKEN_FALSE TOKEN_MAXINT
 %token TOKEN_ARRAY TOKEN_OF TOKEN_RECORD TOKEN_BEGIN TOKEN_END TOKEN_GOTO
 %token TOKEN_ID TOKEN_INT TOKEN_REAL TOKEN_CHAR TOKEN_STRING
@@ -58,7 +65,7 @@ routine_part        :
                             }
                             else
                                 $$=$2;
-                        }   
+                        }
                     |   routine_part procedure_decl
                         {   YYSTYPE t=$1;
                             if(t!=NULL){
@@ -90,7 +97,7 @@ function_head       :   TOKEN_FUNCTION TOKEN_ID
                             $$->child[1]=$6;
                         }
                     ;
-parameters          :   
+parameters          :
                         {$$=NULL;}
                     |   TOKEN_LP para_decl_list TOKEN_RP
                         {$$=$2;}
@@ -178,7 +185,7 @@ const_expr_list     :   const_expr_list const_expr
                             else
                                 $$=$1;
                         }
-                        
+
                     |   const_expr
                         {   $$=$1; }
                     ;
@@ -338,7 +345,7 @@ simple_type_decl    :   ID
                             $$->child[1]=$3;
                             $$->type=EXPTYPE_SIMPLE_LIMIT;
                         }
-                    |   TOKEN_INTEGER_TYPE  
+                    |   TOKEN_INTEGER_TYPE
                         {   $$=newTypeNode(TYPE_SIMPLE_SYS);
                             $$->type=EXPTYPE_INT;
                         }
@@ -373,9 +380,9 @@ ID                  :   TOKEN_ID
                         {   $$=newExpNode(EXP_ID);
                             $$->attr.name=copyString(tokenString);
                         } ;
-routine_body        :   compound_stmt   {$$=$1;} ; 
+routine_body        :   compound_stmt   {$$=$1;} ;
 compound_stmt       :   TOKEN_BEGIN stmt_list TOKEN_END {$$=$2;} ;
-stmt_list           :   
+stmt_list           :
                         {$$=NULL;}
                     |   stmt_list stmt TOKEN_SEMI
                         {
@@ -506,7 +513,7 @@ for_stmt            :   TOKEN_FOR ID TOKEN_ASSIGN expression TOKEN_TO expression
                             $$->child[3]=$8;
                             $$->attr.op=TOKEN_DOWNTO;
                         };
-proc_stmt           :   ID 
+proc_stmt           :   ID
                         {   $$=newStmtNode(STMT_PROC_ID);
                             $$->attr.name=copyString($1->attr.name);
                         }
@@ -547,7 +554,7 @@ args_list           :   args_list TOKEN_COMMA expression
                                 $$=$3;
                         }
                     |   expression  {$$=$1;};
-                            
+
 expression          :   expression TOKEN_GE expr {   $$=newOpExpNode($1,$3,TOKEN_GE); }
                     |   expression TOKEN_GT expr {   $$=newOpExpNode($1,$3,TOKEN_GT); }
                     |   expression TOKEN_LE expr {   $$=newOpExpNode($1,$3,TOKEN_LE); }
@@ -576,7 +583,7 @@ factor              :   ID
                         }
                     |   const_value {$$=$1;}
                     |   TOKEN_LP expression TOKEN_RP    {$$=$2;}
-                    |   TOKEN_NOT factor    
+                    |   TOKEN_NOT factor
                         {   $$=newOpExpNode($2,NULL,TOKEN_NOT);
                         }
                     |   TOKEN_MINUS   factor
@@ -587,7 +594,7 @@ factor              :   ID
                             $$->child[0]=$3;
                             $$->type=EXPTYPE_ARRAY;
                         }
-                    |   ID TOKEN_DOT ID 
+                    |   ID TOKEN_DOT ID
                         {   $$=$1;
                             $$->child[0]=$3;
                             $$->type=EXPTYPE_RECORD;
@@ -619,15 +626,7 @@ factor              :   ID
                     ;
 %%
 
-int yyerror(char* message){
-    fprintf(listing, "Syntax error at line %d: %s\n",lineno,message);
-   // printToken(yychar, tokenString);
-    return 0;
-}
-
-
 TreeNode * parse(){
     yyparse();
     return savedTree;
-
 }
