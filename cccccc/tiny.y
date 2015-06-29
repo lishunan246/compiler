@@ -10,6 +10,7 @@ static int savedLineNo;
 static TreeNode* savedTree;
 static int savedNum;
 static int level=0;
+int yyparse();
 static int yylex(){
     return getToken();
 }
