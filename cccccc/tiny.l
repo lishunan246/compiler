@@ -15,7 +15,9 @@ whitespace [ \t]+
 char \'.\'
 string \".*\"
 %%
-"program"       {return TOKEN_PROGRAM;}
+"program"  {
+    return TOKEN_PROGRAM;
+}
 "if"        {return TOKEN_IF;}
 "then"      {return TOKEN_THEN;}
 "else"      {return TOKEN_ELSE;}
@@ -50,7 +52,7 @@ string \".*\"
 ":"         {return TOKEN_COLON;}
 
 ":="        {return TOKEN_ASSIGN;}
-"="         {return TOKEN_EQUAL;} 
+"="         {return TOKEN_EQUAL;}
 "+"         {return TOKEN_PLUS;}
 "-"         {return TOKEN_MINUS;}
 "or"        {return TOKEN_OR;}
@@ -83,7 +85,10 @@ string \".*\"
 "var"       {return TOKEN_VAR;}
 "function"  {return TOKEN_FUNCTION;}
 "procedure" {return TOKEN_PROCEDURE;}
-{number}    {return TOKEN_INT;}
+{number}    {
+    printf("");
+    return TOKEN_INT;
+}
 {real}      {return TOKEN_REAL;}
 {char}      {return TOKEN_CHAR;}
 {string}    {return TOKEN_STRING;}

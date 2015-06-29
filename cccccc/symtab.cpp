@@ -4,6 +4,9 @@
 #include "symtab.h"
 #include "analyze.h"
 
+#include <string>
+#include <map>
+
 #define ERROR_RETURN 0xffff
 
 /*define size of the hash table*/
@@ -42,11 +45,9 @@ static VariableList variableHashTable[SIZE];
 /*the hash table of types*/
 static TypeList typeHashTable[SIZE];
 
-/*the hash table of function*/
-static FuncList funcHashTable[SIZE];
-
-/*the hash table of procedure*/
-static ProcList procHashTable[SIZE];
+// maps of func and proc
+static std::map<std::string, FuncList> funcMap;
+static std::map<std::string, ProcList> procMap;
 
 /*record the total offset of each scope*/
 static int totalOffset[50];
@@ -195,20 +196,13 @@ int procListInsert(TreeNode* procHead) {
 			tmpNode = tmpNode->sibling;
 		}
 	}
-
-	int h = hash(name);
-	ProcList l = procHashTable[h];
-	ProcList tmp = l;
-	while((tmp != NULL) && (strcmp(name, tmp->name)))
-		tmp = tmp->next;
-	if(tmp == NULL || (strcmp(name, tmp->name)==0 && nestLevel>tmp->nestLevel)) { /*process with same nestlevel not yet in the table, insert to the list head*/
-		tmp = (ProcList) malloc(sizeof(struct ProcListRec));
-		tmp->name = name;
-		tmp->paraList = paraList;
-		tmp->nestLevel = nestLevel;
-		tmp->next = (l == NULL)? NULL:l;
-		procHashTable[h] = tmp;
-	}
+    
+    ProcList tmpProc = (ProcList)malloc(sizeof(struct ProcListRec));
+    tmpProc->name = name;
+    tmpProc->paraList = paraList;
+    tmpProc->nestLevel = nestLevel;
+    tmpProc->next = NULL;
+    procMap[std::string(name)] = tmpProc;
 
 	return offset;
 }
@@ -258,22 +252,15 @@ int funcListInsert(TreeNode* funcHead) {
 	//符号表插入返回值,与函数同名
 	varListInsert(funcHead->attr.name, retType, False, paraNestLevel, NULL, funcHead->lineno, 0, offset);
 	offset = offset + PARA_OFFSET_INC;
-
-	int h = hash(name);
-	FuncList l = funcHashTable[h];
-	FuncList tmp = l;
-	while((tmp != NULL) && (strcmp(name, tmp->name)))
-		tmp = tmp->next;
-	if(tmp == NULL || (strcmp(name, tmp->name)==0 && nestLevel>tmp->nestLevel)) { /*process with same nestlevel not yet in the table, insert to the list head*/
-		tmp = (FuncList) malloc(sizeof(struct FuncListRec));
-		tmp->name = name;
-		tmp->paraList = paraList;
-		tmp->retType = retType;
-		tmp->nestLevel = nestLevel;
-		tmp->next = (l == NULL)? NULL:l;
-		funcHashTable[h] = tmp;
-	}
-
+    
+    FuncList tmpFunc = (FuncList) malloc(sizeof(struct FuncListRec));
+    tmpFunc->name = name;
+    tmpFunc->paraList = paraList;
+    tmpFunc->retType = retType;
+    tmpFunc->nestLevel = nestLevel;
+    tmpFunc->next = NULL;
+    funcMap[std::string(name)] = tmpFunc;
+    
 	return offset;
 }
 
@@ -365,26 +352,18 @@ VariableList varListLookup(char* name) {
 
 /*funcListLookup returns the FuncList of that name or null if not found*/
 FuncList funcListLookup(char* name) {
-	int h = hash(name);
-	FuncList l = funcHashTable[h];
-	while((l != NULL) && (strcmp(name, l->name)))
-		l = l->next;
-	if(l == NULL)
-		return NULL;
-	else
-		return l;
+    if (funcMap.count(std::string(name)) > 0) {
+        return funcMap[std::string(name)];
+    }
+    return NULL;
 }
 
 /*procListLookup returns the ProcList of that name or null if not found*/
 ProcList procListLookup(char* name) {
-	int h = hash(name);
-	ProcList l = procHashTable[h];
-	while((l != NULL) && (strcmp(name, l->name)))
-		l = l->next;
-	if(l == NULL)
-		return NULL;
-	else
-		return l;
+    if (procMap.count(std::string(name)) > 0) {
+        return procMap[std::string(name)];
+    }
+    return NULL;
 }
 
 /*typeListLookup returns the TypeList of that name or null if not found*/
@@ -457,8 +436,6 @@ void initScope() {
 	for(i=0; i<SIZE; i++) {
 		variableHashTable[i] = NULL;
 		typeHashTable[i] = NULL;
-		procHashTable[i] = NULL;
-		funcHashTable[i] = NULL;
 	}
 }
 
@@ -479,8 +456,6 @@ int leaveScope() {
 	for(i=0; i<SIZE; i++) {
 		VariableList vl = variableHashTable[i];
 		TypeList tl = typeHashTable[i];
-		FuncList fl = funcHashTable[i];
-		ProcList pl = procHashTable[i];
 
 		while(vl != NULL && vl->nestLevel >= tmp) {
 			ptr1 = (void*)vl;
@@ -539,22 +514,18 @@ void printSymTab(FILE* listing) {
 
 	fprintf(listing, "Function Name		NestLevel 	Return Type 	Parameter\n");
 	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
-	for(i=0; i<SIZE; i++) {
-		if(funcHashTable[i] != NULL) {
-			FuncList l = funcHashTable[i];
-			while(l != NULL) {
-				SimpleTypeList t = l->paraList;
-				fprintf(listing, "%-14s ", l->name);
-				fprintf(listing, "%-8d", l->nestLevel);
-				fprintf(listing, "%-8d ", l->retType);
-				while(t != NULL) {
-					fprintf(listing, "%-14s ", t->name);
-					t = t->next;
-				}
-				fprintf(listing, "\n");
-				l = l->next;
-			}
-		}
-	}
-
+    
+    std::map<std::string, FuncList>::iterator itor;
+    for (itor = funcMap.begin(); itor != funcMap.end(); itor++) {
+        FuncList l = itor->second;
+        SimpleTypeList t = l->paraList;
+        fprintf(listing, "%-14s ", l->name);
+        fprintf(listing, "%-8d", l->nestLevel);
+        fprintf(listing, "%-8d ", l->retType);
+        while(t != NULL) {
+            fprintf(listing, "%-14s ", t->name);
+            t = t->next;
+        }
+        fprintf(listing, "\n");
+    }
 }

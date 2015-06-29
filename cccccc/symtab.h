@@ -15,7 +15,7 @@ typedef struct MemLocRec {
 	int baseLoc;
 	int offset;
 	ExpType type;
-} MemLoc;	
+} MemLoc;
 
 /*the list of line numbers of the source code in which a variable is referenced*/
 typedef struct LineListRec {
@@ -51,7 +51,7 @@ typedef struct ArrayDefRec {
 /*enum detail*/
 typedef struct EnumDefRec {
 	char* mark; /*point to a constant value*/
-	struct EnumDefRec* next;		
+	struct EnumDefRec* next;
 }* EnumDef;
 
 /*record detail*/
@@ -83,7 +83,7 @@ typedef struct VariableListRec {
 	ExpType type;
 	int isConst;
 	int nestLevel;
-	void* pAttr; /*pAttr point to the definition detail when type is enum, array or record, otherwise null*/	
+	void* pAttr; /*pAttr point to the definition detail when type is enum, array or record, otherwise null*/
 	LineList lines;
 	MemLoc memloc;
 	struct VariableListRec* next;
@@ -110,7 +110,7 @@ typedef struct ProcListRec {
 	char* name;
 	SimpleTypeList paraList;
 	int nestLevel;
-	struct ProcListRec* next; 
+	struct ProcListRec* next;
 }* ProcList;
 
 
@@ -124,7 +124,7 @@ TypeList insertTypeDef(TypeList typeList, char* name, ExpType type, int nestLeve
 RecordDef newDefinedRecord(TypeList ptr);
 RecordDef newAnonyRecord(TypeList typeList);
 SimpleTypeList newSimpleTypeList(char* name, ExpType type, int isVar);
-SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpType type, int isVar); 
+SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpType type, int isVar);
 
 int procListInsert(TreeNode* procHead);
 int funcListInsert(TreeNode* funcHead);

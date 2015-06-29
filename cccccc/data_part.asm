@@ -12,4 +12,3 @@ lb_writeln_real db '%lf',0ah,0dh,0
 lb_tmp db 0, 0, 0, 0, 0, 0, 0, 0
 lb_read_int db '%d',0
 lb_read_real db '%f',0
-_REALNUM0 dd 1.340000

@@ -233,7 +233,7 @@ static int yylex(){
     return getToken();
 }
 
-int yyerror(char* message){
+int yyerror(char* message) {
     fprintf(listing, "Syntax error at line %d: %s\n",lineno,message);
    // printToken(yychar, tokenString);
     return 0;
