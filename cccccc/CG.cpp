@@ -873,5 +873,7 @@ CG_OUTPUT("main:\n");
 	}	
 	fclose(codename);
 	fclose(dataname);
-	fclose(ff);	
+	fclose(ff);
+    
+    return 0;
 }
