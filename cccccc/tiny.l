@@ -5,16 +5,19 @@
 char previoustokenString[MAXTOKENLEN+1];
 char tokenString[MAXTOKENLEN+1];
 %}
+
 digit [0-9]
 real {digit}+\.{digit}+
 number {digit}+
-letter [a-zA-Z]
-identifier {letter}+
+letter [a-zA-Z_]
+identifier {letter}({letter}|{digit})*
 newline \n
 whitespace [ \t]+
 char \'.\'
 string \".*\"
+
 %%
+
 "program"  {
     return TOKEN_PROGRAM;
 }
