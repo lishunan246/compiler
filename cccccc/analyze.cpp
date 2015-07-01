@@ -239,14 +239,14 @@ int buildSymtab(TreeNode* syntaxTree) {
 	offset = -4;
 	traverse(syntaxTree);
 	if(TraceAnalyze) {
-		fprintf(listing, "\nSymbol table:\n\n");
-		printSymTab(listing);
+		printf( "\nSymbol table:\n\n");
+		printSymTab(stdout);
 	}
 	return -offset;
 }
 
 static void typeError(TreeNode* t, char* message) {
-	fprintf(listing, "Type error at line %d: %s\n", t->lineno, message);
+	printf( "Type error at line %d: %s\n", t->lineno, message);
 	Error = true;
 }
 

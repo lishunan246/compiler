@@ -10,7 +10,6 @@
 using namespace std;
 char filename[30] = "test2";
 FILE * source;
-FILE * listing;
 bool TraceScan = true;
 int lineno=0;
 
@@ -36,7 +35,6 @@ int main(int argc, char const *argv[])
 		return 1;
 	}
 
-	listing=stdout;
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
