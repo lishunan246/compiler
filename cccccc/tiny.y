@@ -2,10 +2,9 @@
 #define YYPARSER
 #include "util.h"
 #define YYSTYPE TreeNode *
-static char * savedName;
-static int savedLineNo;
-static TreeNode* savedTree;
-static int savedNum;
+static char * myName;
+static TreeNode* myTree;
+static int myNum;
 static int level=0;
 TokenType getToken();
 
@@ -20,31 +19,22 @@ int yyerror(char* message) {
 }
 
 %}
-%token TOKEN_PROGRAM TOKEN_FUNCTION TOKEN_PROCEDURE TOKEN_CONST TOKEN_TYPE TOKEN_VAR
-%token TOKEN_IF TOKEN_THEN TOKEN_ELSE TOKEN_REPEAT TOKEN_UNTIL TOKEN_WHILE TOKEN_DO TOKEN_CASE TOKEN_TO TOKEN_DOWNTO TOKEN_FOR
-%token TOKEN_EQUAL TOKEN_UNEQUAL TOKEN_GE TOKEN_GT TOKEN_LE TOKEN_LT TOKEN_ASSIGN TOKEN_PLUS TOKEN_MINUS TOKEN_MUL TOKEN_DIV TOKEN_OR TOKEN_AND TOKEN_NOT TOKEN_MOD TOKEN_READ TOKEN_WRITE TOKEN_WRITELN
-%token TOKEN_LB TOKEN_RB TOKEN_SEMI TOKEN_DOT TOKEN_DOTDOT TOKEN_LP TOKEN_RP TOKEN_COMMA TOKEN_COLON
-%token TOKEN_INTEGER_TYPE TOKEN_BOOLEAN_TYPE TOKEN_CHAR_TYPE TOKEN_REAL_TYPE
-%token TOKEN_TRUE TOKEN_FALSE TOKEN_MAXINT
-%token TOKEN_ARRAY TOKEN_OF TOKEN_RECORD TOKEN_BEGIN TOKEN_END TOKEN_GOTO
-%token TOKEN_ID TOKEN_INT TOKEN_REAL TOKEN_CHAR TOKEN_STRING
-%token ERROR
-%token TOKEN_ABS TOKEN_CHR TOKEN_ODD TOKEN_ORD TOKEN_PRED TOKEN_SQR TOKEN_SQRT TOKEN_SUCC TOKEN_READLN
+%token TOKEN_PROGRAM TOKEN_FUNCTION TOKEN_PROCEDURE TOKEN_CONST TOKEN_TYPE TOKEN_VAR TOKEN_IF TOKEN_THEN TOKEN_ELSE TOKEN_REPEAT TOKEN_UNTIL TOKEN_WHILE TOKEN_DO TOKEN_CASE TOKEN_TO TOKEN_DOWNTO TOKEN_FOR TOKEN_EQUAL TOKEN_UNEQUAL TOKEN_GE TOKEN_GT TOKEN_LE TOKEN_LT TOKEN_ASSIGN TOKEN_PLUS TOKEN_MINUS TOKEN_MUL TOKEN_DIV TOKEN_OR TOKEN_AND TOKEN_NOT TOKEN_MOD TOKEN_READ TOKEN_WRITE TOKEN_WRITELN TOKEN_LB TOKEN_RB TOKEN_SEMI TOKEN_DOT TOKEN_DOTDOT TOKEN_LP TOKEN_RP TOKEN_COMMA TOKEN_COLON TOKEN_INTEGER_TYPE TOKEN_BOOLEAN_TYPE TOKEN_CHAR_TYPE TOKEN_REAL_TYPE TOKEN_TRUE TOKEN_FALSE TOKEN_MAXINT TOKEN_ARRAY TOKEN_OF TOKEN_RECORD TOKEN_BEGIN TOKEN_END TOKEN_GOTO TOKEN_ID TOKEN_INT TOKEN_REAL TOKEN_CHAR TOKEN_STRING ERROR TOKEN_ABS TOKEN_CHR TOKEN_ODD TOKEN_ORD TOKEN_PRED TOKEN_SQR TOKEN_SQRT TOKEN_SUCC TOKEN_READLN
 %%
 
 program             :   TOKEN_PROGRAM TOKEN_ID
                         {   
-                            savedName = copyString(tokenString);
+                            myName = copyString(tokenString);
                         }
                         TOKEN_SEMI routine TOKEN_DOT
                         {   $$ = $5;
-                            $$->attr.name=savedName;
-                            savedTree = $$;
+                            $$->attr.name=myName;
+                            myTree = $$;
                         };
 /*
 program_head        :   TOKEN_PROGRAM TOKEN_ID
                         {   
-                            savedName = copyString(tokenString);
+                            myName = copyString(tokenString);
                         }
                         TOKEN_SEMI 
 */ 
@@ -91,9 +81,10 @@ const_expr          :    ID TOKEN_EQUAL const_value TOKEN_SEMI
                         {
                             $$ = newDeclarationNode(DECL_CONST);
                             $$->attr.name = copyString($1->attr.name);
-                            freeNode($1);
                             $$->child[0]=$3;
                             $$->type=$3->type;
+                            freeNode($1);
+                            
                         }
                     ;
 const_value         :   TOKEN_INT
@@ -187,9 +178,10 @@ array_type_decl     :   TOKEN_ARRAY TOKEN_LB simple_type_decl TOKEN_RB TOKEN_OF
                         type_decl
                         {
                             $$=newTypeNode(TYPE_ARRAY);
+                            $$->type=EXPTYPE_ARRAY;
                             $$->child[0]=$3;
                             $$->child[1]=$6;
-                            $$->type=EXPTYPE_ARRAY;
+                            
                         }
                     ;
 record_type_decl    :   TOKEN_RECORD field_decl_list TOKEN_END
@@ -240,37 +232,37 @@ simple_type_decl    :   ID
                         }
                     |   TOKEN_LP name_list TOKEN_RP
                         {   $$=newTypeNode(TYPE_SIMPLE_ENUM);
-                            $$->child[0]=$2;
                             $$->type=EXPTYPE_SIMPLE_ENUM;
+                            $$->child[0]=$2;
                         }
                     |   const_value TOKEN_DOTDOT const_value
                         {   $$=newTypeNode(TYPE_SIMPLE_LIMIT);
+                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                             $$->child[0]=$1;
                             $$->child[1]=$3;
-                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                         }
                     |   TOKEN_MINUS const_value TOKEN_DOTDOT const_value
                         {
                             $$=newTypeNode(TYPE_SIMPLE_LIMIT);
+                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                             $$->child[0]=$2;
                             $$->child[0]->attr.val *= -1;
                             $$->child[1]=$4;
-                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                         }
                     |   TOKEN_MINUS const_value TOKEN_DOTDOT TOKEN_MINUS const_value
                         {   $$=newTypeNode(TYPE_SIMPLE_LIMIT);
+                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                             $$->child[0]=$2;
                             $$->child[0]->attr.val *=-1;
                             $$->child[1]=$5;
                             $$->child[1]->attr.val *=-1;
-                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                         }
                     |   ID TOKEN_DOTDOT ID
                         {
                             $$=newTypeNode(TYPE_SIMPLE_LIMIT);
+                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                             $$->child[0]=$1;
                             $$->child[1]=$3;
-                            $$->type=EXPTYPE_SIMPLE_LIMIT;
                         }
                     |   TOKEN_INTEGER_TYPE
                         {   $$=newTypeNode(TYPE_SIMPLE_SYS);
@@ -356,11 +348,11 @@ function_decl       :   function_head TOKEN_SEMI routine TOKEN_SEMI
                         }
                     ;
 function_head       :   TOKEN_FUNCTION TOKEN_ID
-                        {   savedName=copyString(tokenString);}
+                        {   myName=copyString(tokenString);}
                         parameters  TOKEN_COLON simple_type_decl
                         {
                             $$=newDeclarationNode(DECL_FUNCTIONHEAD);
-                            $$->attr.name=savedName;
+                            $$->attr.name=myName;
                             $$->child[0]=$4;
                             $$->child[1]=$6;
                         }
@@ -373,10 +365,10 @@ procedure_decl      :   procedure_head TOKEN_SEMI routine TOKEN_SEMI
                         }
                     ;
 procedure_head      :   TOKEN_PROCEDURE TOKEN_ID
-                        {   savedName=copyString(tokenString);}
+                        {   myName=copyString(tokenString);}
                         parameters
                         {   $$=newDeclarationNode(DECL_PROCEDUREHEAD);
-                            $$->attr.name=savedName;
+                            $$->attr.name=myName;
                             $$->child[0]=$4;
                         }
                     ;
@@ -449,12 +441,12 @@ stmt_list           :
                     ;
 stmt                :   TOKEN_INT
                         {   
-                            savedNum= atoi(tokenString);
+                            myNum= atoi(tokenString);
                         }
                         TOKEN_COLON no_label_stmt
                         {
-                            $$=newStmtNode(STMT_LABEL);
-                            $$->attr.val=savedNum;
+                            $$=newStatementNode(STMT_LABEL);
+                            $$->attr.val=myNum;
                             $$->child[0]=$4;
                         }
                     |   no_label_stmt
@@ -491,13 +483,13 @@ no_label_stmt       :   assign_stmt {
                         }
                     ;
 assign_stmt         :   ID TOKEN_ASSIGN expression
-                        {   $$=newStmtNode(STMT_ASSIGN);
+                        {   $$=newStatementNode(STMT_ASSIGN);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                             $$->attr.op=TOKEN_ID;
                         }
                     |   ID TOKEN_LB expression TOKEN_RB TOKEN_ASSIGN expression
-                        {   $$=newStmtNode(STMT_ASSIGN);
+                        {   $$=newStatementNode(STMT_ASSIGN);
                             $$->child[0]=$1;
                             ($$->child[0])->child[0]=$3;
                             $$->child[1]=$6;
@@ -505,7 +497,7 @@ assign_stmt         :   ID TOKEN_ASSIGN expression
                         }
                     |
                         ID TOKEN_DOT ID TOKEN_ASSIGN expression
-                        {   $$=newStmtNode(STMT_ASSIGN);
+                        {   $$=newStatementNode(STMT_ASSIGN);
                             $$->child[0]=$1;
                             ($$->child[0])->child[0]=$3;
                             $$->child[1]=$5;
@@ -513,12 +505,12 @@ assign_stmt         :   ID TOKEN_ASSIGN expression
                         }
                     ;
 goto_stmt           :   TOKEN_GOTO  TOKEN_INT
-                        {   $$=newStmtNode(STMT_GOTO);
+                        {   $$=newStatementNode(STMT_GOTO);
                             $$->attr.val=atoi(tokenString);
                         }
                     ;
 if_stmt             :   TOKEN_IF expression TOKEN_THEN stmt  else_clause
-                        {   $$=newStmtNode(STMT_IF);
+                        {   $$=newStatementNode(STMT_IF);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                             $$->child[2]=$5;
@@ -533,18 +525,18 @@ else_clause         :   {
                     ;
 repeat_stmt         :   TOKEN_REPEAT stmt_list TOKEN_UNTIL expression
                         {
-                            $$=newStmtNode(STMT_REPEAT);
+                            $$=newStatementNode(STMT_REPEAT);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                         }
                     |
 while_stmt          :   TOKEN_WHILE expression TOKEN_DO stmt
-                        {   $$=newStmtNode(STMT_WHILE);
+                        {   $$=newStatementNode(STMT_WHILE);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                         };
 case_stmt           :   TOKEN_CASE expression TOKEN_OF case_expr_list TOKEN_END
-                        {   $$=newStmtNode(STMT_CASE);
+                        {   $$=newStatementNode(STMT_CASE);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                         };
@@ -577,7 +569,7 @@ case_expr           :   const_value TOKEN_COLON stmt TOKEN_SEMI
                         };
 for_stmt            :   TOKEN_FOR ID TOKEN_ASSIGN expression TOKEN_TO expression TOKEN_DO stmt
                         {
-                            $$=newStmtNode(STMT_FOR);
+                            $$=newStatementNode(STMT_FOR);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                             $$->child[2]=$6;
@@ -586,7 +578,7 @@ for_stmt            :   TOKEN_FOR ID TOKEN_ASSIGN expression TOKEN_TO expression
                         }
                     |   TOKEN_FOR ID TOKEN_ASSIGN expression TOKEN_DOWNTO expression TOKEN_DO stmt
                         {
-                            $$=newStmtNode(STMT_FOR);
+                            $$=newStatementNode(STMT_FOR);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                             $$->child[2]=$6;
@@ -594,31 +586,31 @@ for_stmt            :   TOKEN_FOR ID TOKEN_ASSIGN expression TOKEN_TO expression
                             $$->attr.op=TOKEN_DOWNTO;
                         };
 proc_stmt           :   ID
-                        {   $$=newStmtNode(STMT_PROC_ID);
+                        {   $$=newStatementNode(STMT_PROC_ID);
                             $$->attr.name=copyString($1->attr.name);
                         }
                     |   ID TOKEN_LP args_list TOKEN_RP
-                        {   $$=newStmtNode(STMT_PROC_ID);
+                        {   $$=newStatementNode(STMT_PROC_ID);
                             $$->attr.name=copyString($1->attr.name);
                             $$->child[0]=$3;
                         }
                     |   TOKEN_READ TOKEN_LP factor TOKEN_RP
                         {
-                            $$=newStmtNode(STMT_PROC_SYS);
+                            $$=newStatementNode(STMT_PROC_SYS);
                             $$->attr.op=TOKEN_READ;
                             $$->child[0]=$3;
                         }
                     |   TOKEN_WRITE TOKEN_LP args_list TOKEN_RP
-                        {   $$=newStmtNode(STMT_PROC_SYS);
+                        {   $$=newStatementNode(STMT_PROC_SYS);
                             $$->attr.op=TOKEN_WRITE;
                             $$->child[0]=$3;
                         }
                     |   TOKEN_WRITELN
-                        {   $$=newStmtNode(STMT_PROC_SYS);
+                        {   $$=newStatementNode(STMT_PROC_SYS);
                             $$->attr.op=TOKEN_WRITELN;
                         }
                     |   TOKEN_WRITELN TOKEN_LP args_list TOKEN_RP
-                        {   $$=newStmtNode(STMT_PROC_SYS);
+                        {   $$=newStatementNode(STMT_PROC_SYS);
                             $$->attr.op=TOKEN_WRITELN;
                             $$->child[0]=$3;
                         }
@@ -640,22 +632,22 @@ args_list           :   args_list TOKEN_COMMA expression
                     ;
 
 expression          :   expression TOKEN_GE expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_GE); 
+                            $$=newExpressionNode($1,$3,TOKEN_GE);
                         }
                     |   expression TOKEN_GT expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_GT); 
+                            $$=newExpressionNode($1,$3,TOKEN_GT);
                         }
                     |   expression TOKEN_LE expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_LE); 
+                            $$=newExpressionNode($1,$3,TOKEN_LE);
                         }
                     |   expression TOKEN_LT expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_LT); 
+                            $$=newExpressionNode($1,$3,TOKEN_LT);
                         }
                     |   expression TOKEN_EQUAL expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_EQUAL); 
+                            $$=newExpressionNode($1,$3,TOKEN_EQUAL);
                         }
                     |   expression TOKEN_UNEQUAL expr {   
-                            $$=newOpExpNode($1,$3,TOKEN_UNEQUAL); 
+                            $$=newExpressionNode($1,$3,TOKEN_UNEQUAL);
                         }
                     |   expr {   
                             $$=$1;
@@ -663,13 +655,13 @@ expression          :   expression TOKEN_GE expr {
                     ;
 
 expr                :   expr TOKEN_PLUS term  {   
-                            $$=newOpExpNode($1,$3,TOKEN_PLUS); 
+                            $$=newExpressionNode($1,$3,TOKEN_PLUS);
                         }
                     |   expr TOKEN_MINUS term  {   
-                            $$=newOpExpNode($1,$3,TOKEN_MINUS); 
+                            $$=newExpressionNode($1,$3,TOKEN_MINUS);
                         }
                     |   expr TOKEN_OR term  {   
-                            $$=newOpExpNode($1,$3,TOKEN_OR); 
+                            $$=newExpressionNode($1,$3,TOKEN_OR);
                         }
                     |   term {   
                             $$=$1;
@@ -677,16 +669,16 @@ expr                :   expr TOKEN_PLUS term  {
                     ;
 
 term                :   term TOKEN_MUL factor {   
-                            $$=newOpExpNode($1,$3,TOKEN_MUL); 
+                            $$=newExpressionNode($1,$3,TOKEN_MUL);
                         }
                     |   term TOKEN_DIV factor {   
-                            $$=newOpExpNode($1,$3,TOKEN_DIV); 
+                            $$=newExpressionNode($1,$3,TOKEN_DIV);
                         }
                     |   term TOKEN_MOD factor {   
-                            $$=newOpExpNode($1,$3,TOKEN_MOD); 
+                            $$=newExpressionNode($1,$3,TOKEN_MOD);
                         }
                     |   term TOKEN_AND factor {   
-                            $$=newOpExpNode($1,$3,TOKEN_AND); 
+                            $$=newExpressionNode($1,$3,TOKEN_AND);
                         }
                     |   factor {
                             $$=$1;
@@ -710,11 +702,11 @@ factor              :   ID
                         }
                     |   TOKEN_NOT factor
                         {   
-                            $$=newOpExpNode($2,NULL,TOKEN_NOT);
+                            $$=newExpressionNode($2,NULL,TOKEN_NOT);
                         }
                     |   TOKEN_MINUS   factor
                         {   
-                            $$=newOpExpNode($2,NULL,TOKEN_MINUS);
+                            $$=newExpressionNode($2,NULL,TOKEN_MINUS);
                         }
                     |   ID TOKEN_LB expression TOKEN_RB
                         {   $$=$1;
@@ -763,5 +755,5 @@ factor              :   ID
 
 TreeNode * parse(){
     yyparse();
-    return savedTree;
+    return myTree;
 }

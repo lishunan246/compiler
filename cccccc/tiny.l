@@ -256,7 +256,7 @@ TokenType getToken(){
     currentToken = yylex();
     strncpy(previousTokenString,tokenString,MAXTOKENLEN);
     strncpy(tokenString,yytext,MAXTOKENLEN);
-    if(TraceScan){
+    if(traceLine){
         printf("\t%d: ",lineno);
         printToken(currentToken,tokenString);
     }
