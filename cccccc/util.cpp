@@ -33,6 +33,10 @@ void printToken(TokenType token, const char * tokenString){
             std::cout<<"[write] "<<std::endl;break;
         case TOKEN_WRITELN:
             std::cout<<"[writeln] "<<std::endl;break;
+        case TOKEN_FOR:
+            std::cout<<"[for] "<<std::endl;break;
+         case TOKEN_DO:
+            std::cout<<"[do] "<<std::endl;break;   
         //opcode
         case TOKEN_EQUAL:   std::cout<<"="<<std::endl;break;
         case TOKEN_UNEQUAL:   std::cout<<"<>"<<std::endl;break;
