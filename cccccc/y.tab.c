@@ -1804,7 +1804,7 @@ yyreduce:
   case 5:
 #line 58 "tiny.y"
     {
-                            (yyval) = newDeclNode(DECL_ROUTINEHEAD);
+                            (yyval) = newDeclarationNode(DECL_ROUTINEHEAD);
                             (yyval) ->child[0]=(yyvsp[(1) - (4)]);
                             (yyval) ->child[1]=(yyvsp[(2) - (4)]);
                             (yyval) ->child[2]=(yyvsp[(3) - (4)]);
@@ -1851,7 +1851,7 @@ yyreduce:
   case 10:
 #line 92 "tiny.y"
     {
-                            (yyval) = newDeclNode(DECL_CONST);
+                            (yyval) = newDeclarationNode(DECL_CONST);
                             (yyval)->attr.name = copyString((yyvsp[(1) - (4)])->attr.name);
                             freeNode((yyvsp[(1) - (4)]));
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
@@ -1962,7 +1962,7 @@ yyreduce:
 
   case 22:
 #line 172 "tiny.y"
-    {   (yyval)=newDeclNode(DECL_TYPE);
+    {   (yyval)=newDeclarationNode(DECL_TYPE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
                         }
@@ -2178,7 +2178,7 @@ yyreduce:
 
   case 47:
 #line 318 "tiny.y"
-    {   (yyval)=newDeclNode(DECL_VAR);
+    {   (yyval)=newDeclarationNode(DECL_VAR);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
                         }
@@ -2232,7 +2232,7 @@ yyreduce:
   case 53:
 #line 353 "tiny.y"
     {
-                            (yyval)=newDeclNode(DECL_FUNCTION);
+                            (yyval)=newDeclarationNode(DECL_FUNCTION);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
                         }
@@ -2246,7 +2246,7 @@ yyreduce:
   case 55:
 #line 362 "tiny.y"
     {
-                            (yyval)=newDeclNode(DECL_FUNCTIONHEAD);
+                            (yyval)=newDeclarationNode(DECL_FUNCTIONHEAD);
                             (yyval)->attr.name=savedName;
                             (yyval)->child[0]=(yyvsp[(4) - (6)]);
                             (yyval)->child[1]=(yyvsp[(6) - (6)]);
@@ -2256,7 +2256,7 @@ yyreduce:
   case 56:
 #line 370 "tiny.y"
     {
-                            (yyval)=newDeclNode(DECL_PROCEDURE);
+                            (yyval)=newDeclarationNode(DECL_PROCEDURE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
                         }
@@ -2269,7 +2269,7 @@ yyreduce:
 
   case 58:
 #line 379 "tiny.y"
-    {   (yyval)=newDeclNode(DECL_PROCEDUREHEAD);
+    {   (yyval)=newDeclarationNode(DECL_PROCEDUREHEAD);
                             (yyval)->attr.name=savedName;
                             (yyval)->child[0]=(yyvsp[(4) - (4)]);
                         }
@@ -2313,7 +2313,7 @@ yyreduce:
   case 63:
 #line 410 "tiny.y"
     {
-                            (yyval)=newDeclNode(DECL_VAR_PARA);
+                            (yyval)=newDeclarationNode(DECL_VAR_PARA);
                             (yyval)->child[0]=(yyvsp[(2) - (4)]);
                             (yyval)->child[1]=(yyvsp[(4) - (4)]);
                         }
@@ -2322,7 +2322,7 @@ yyreduce:
   case 64:
 #line 416 "tiny.y"
     {
-                            (yyval)=newDeclNode(DECL_VAL_PARA);
+                            (yyval)=newDeclarationNode(DECL_VAL_PARA);
                             (yyval)->child[0]=(yyvsp[(1) - (3)]);
                             (yyval)->child[1]=(yyvsp[(3) - (3)]);
                         }

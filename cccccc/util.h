@@ -9,7 +9,7 @@ TreeNode * newExpNode(ExpKind e);
 TreeNode * newOpExpNode(TreeNode*, TreeNode*,TokenType);
 TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args);
 
-TreeNode * newDeclNode(DeclKind d);
+TreeNode * newDeclarationNode(DeclKind d);
 
 TreeNode * newTypeNode(TypeKind type);
 

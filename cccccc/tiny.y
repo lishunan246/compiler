@@ -56,7 +56,7 @@ routine             :   routine_head routine_body
                         };
 routine_head        :   const_part type_part var_part routine_part
                         {
-                            $$ = newDeclNode(DECL_ROUTINEHEAD);
+                            $$ = newDeclarationNode(DECL_ROUTINEHEAD);
                             $$ ->child[0]=$1;
                             $$ ->child[1]=$2;
                             $$ ->child[2]=$3;
@@ -90,7 +90,7 @@ const_expr_list     :   const_expr_list const_expr
                     ;
 const_expr          :    ID TOKEN_EQUAL const_value TOKEN_SEMI
                         {
-                            $$ = newDeclNode(DECL_CONST);
+                            $$ = newDeclarationNode(DECL_CONST);
                             $$->attr.name = copyString($1->attr.name);
                             freeNode($1);
                             $$->child[0]=$3;
@@ -169,7 +169,7 @@ type_decl_list      :   type_decl_list  type_definition
                         }
                     ;
 type_definition     :   ID TOKEN_EQUAL type_decl TOKEN_SEMI
-                        {   $$=newDeclNode(DECL_TYPE);
+                        {   $$=newDeclarationNode(DECL_TYPE);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                         }
@@ -315,7 +315,7 @@ var_decl_list       :   var_decl_list var_decl
                         }
                     ;
 var_decl            :   name_list TOKEN_COLON type_decl TOKEN_SEMI
-                        {   $$=newDeclNode(DECL_VAR);
+                        {   $$=newDeclarationNode(DECL_VAR);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                         }
@@ -351,7 +351,7 @@ routine_part        :
                     ;
 function_decl       :   function_head TOKEN_SEMI routine TOKEN_SEMI
                         {
-                            $$=newDeclNode(DECL_FUNCTION);
+                            $$=newDeclarationNode(DECL_FUNCTION);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                         }
@@ -360,7 +360,7 @@ function_head       :   TOKEN_FUNCTION TOKEN_ID
                         {   savedName=copyString(tokenString);}
                         parameters  TOKEN_COLON simple_type_decl
                         {
-                            $$=newDeclNode(DECL_FUNCTIONHEAD);
+                            $$=newDeclarationNode(DECL_FUNCTIONHEAD);
                             $$->attr.name=savedName;
                             $$->child[0]=$4;
                             $$->child[1]=$6;
@@ -368,7 +368,7 @@ function_head       :   TOKEN_FUNCTION TOKEN_ID
                     ;
 procedure_decl      :   procedure_head TOKEN_SEMI routine TOKEN_SEMI
                         {
-                            $$=newDeclNode(DECL_PROCEDURE);
+                            $$=newDeclarationNode(DECL_PROCEDURE);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                         }
@@ -376,7 +376,7 @@ procedure_decl      :   procedure_head TOKEN_SEMI routine TOKEN_SEMI
 procedure_head      :   TOKEN_PROCEDURE TOKEN_ID
                         {   savedName=copyString(tokenString);}
                         parameters
-                        {   $$=newDeclNode(DECL_PROCEDUREHEAD);
+                        {   $$=newDeclarationNode(DECL_PROCEDUREHEAD);
                             $$->attr.name=savedName;
                             $$->child[0]=$4;
                         }
@@ -408,13 +408,13 @@ para_decl_list      :   para_decl_list  TOKEN_SEMI  para_type_list
                     ;
 para_type_list      :   TOKEN_VAR name_list TOKEN_COLON simple_type_decl
                         {
-                            $$=newDeclNode(DECL_VAR_PARA);
+                            $$=newDeclarationNode(DECL_VAR_PARA);
                             $$->child[0]=$2;
                             $$->child[1]=$4;
                         }
                     |   name_list TOKEN_COLON simple_type_decl
                         {
-                            $$=newDeclNode(DECL_VAL_PARA);
+                            $$=newDeclarationNode(DECL_VAL_PARA);
                             $$->child[0]=$1;
                             $$->child[1]=$3;
                         }

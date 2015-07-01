@@ -21,19 +21,19 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_IF:
         case TOKEN_THEN:
         case TOKEN_ELSE:
-            std::cout<<"reserved word: "<<tokenString<<std::endl;
+            std::cout<<"[reserved word] "<<tokenString<<std::endl;
             break;
 
         case TOKEN_TO:
-            std::cout<<"to"<<std::endl;break;
+            std::cout<<"[to] "<<std::endl;break;
         case TOKEN_DOWNTO:
-            std::cout<<"down to"<<std::endl;break;
+            std::cout<<"[down to] "<<std::endl;break;
         case TOKEN_READ:
-            std::cout<<"read"<<std::endl;break;
+            std::cout<<"[read] "<<std::endl;break;
         case TOKEN_WRITE:
-            std::cout<<"write"<<std::endl;break;
+            std::cout<<"[write] "<<std::endl;break;
         case TOKEN_WRITELN:
-            std::cout<<"writeln"<<std::endl;break;
+            std::cout<<"[writeln] "<<std::endl;break;
 
 
         case TOKEN_EQUAL:   std::cout<<"="<<std::endl;break;
@@ -59,24 +59,26 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_RP:      std::cout<<")"<<std::endl;break;
         case TOKEN_COMMA:   std::cout<<","<<std::endl;break;
         case TOKEN_COLON:   std::cout<<":"<<std::endl;break;
+        case TOKEN_ASSIGN:   std::cout<<":="<<std::endl;break;
+        
 
         case TOKEN_INTEGER_TYPE:
         case TOKEN_BOOLEAN_TYPE:
         case TOKEN_CHAR_TYPE:
         case TOKEN_REAL_TYPE:
         case TOKEN_ARRAY:
-            std::cout<<"TYPE, name="<<tokenString<<std::endl;break;
+            std::cout<<"[TYPE] name="<<tokenString<<std::endl;break;
 
         case TOKEN_TRUE:
         case TOKEN_FALSE:
-            std::cout<<"BOOLEAN, val="<<tokenString<<std::endl;break;
+            std::cout<<"[BOOLEAN] val="<<tokenString<<std::endl;break;
 
-        case TOKEN_INT: std::cout<<"INT, val="<<tokenString<<std::endl;break;
-        case TOKEN_REAL: std::cout<<"REAL, val="<<tokenString<<std::endl;break;
-        case TOKEN_CHAR: std::cout<<"CHAR, val="<<tokenString<<std::endl;break;
-        case TOKEN_STRING: std::cout<<"STRING, val="<<tokenString<<std::endl;break;
+        case TOKEN_INT: std::cout<<"[INT] val="<<tokenString<<std::endl;break;
+        case TOKEN_REAL: std::cout<<"[REAL] val="<<tokenString<<std::endl;break;
+        case TOKEN_CHAR: std::cout<<"[CHAR] val="<<tokenString<<std::endl;break;
+        case TOKEN_STRING: std::cout<<"[STRING] val="<<tokenString<<std::endl;break;
 
-        case TOKEN_ID: std::cout<<"ID name="<<tokenString<<std::endl;break;
+        case TOKEN_ID: std::cout<<"[ID] name="<<tokenString<<std::endl;break;
 
         case TOKEN_ABS: std::cout<<"abs"<<std::endl;break;
         case TOKEN_CHR: std::cout<<"chr"<<std::endl;break;
@@ -92,11 +94,11 @@ void printToken(TokenType token, const char * tokenString){
     }
 }
 
-TreeNode * newDeclNode(DeclKind kind){
+TreeNode * newDeclarationNode(DeclKind kind){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
     int i;
     if(t==NULL)
-      std::cout<<"Out of memory error at line "<<lineno<<std::endl;
+      std::cout<<"***Out of memory error at line "<<lineno<<std::endl;
     else{
         for(i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
