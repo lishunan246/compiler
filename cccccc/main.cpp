@@ -15,9 +15,9 @@ TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
-	char filename[] = "test2";
+	char filename[] = "test002.pas";
 	char asmFileName[] = "out.asm";
-	
+
 	if(argc==2)
 	{
 		cout<<"Opening: "<<argv[1]<<endl;
@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 	}
 	else if(argc==1)
 	{
-		source = fopen(filename,"r");		
+		source = fopen(filename,"r");
 	}
 	else
 	{
@@ -41,7 +41,7 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-    
+
     CG_main(syntaxTree, asmFileName);
 
     return 0;
