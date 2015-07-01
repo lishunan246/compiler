@@ -218,7 +218,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 1 "tiny.y"
+#line 1 "pas.y"
 
 #define YYPARSER
 #include "util.h"
@@ -1777,14 +1777,14 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 26 "tiny.y"
+#line 26 "pas.y"
     {   
                             myName = copyString(tokenString);
                         }
     break;
 
   case 3:
-#line 30 "tiny.y"
+#line 30 "pas.y"
     {   (yyval) = (yyvsp[(5) - (6)]);
                             (yyval)->attr.name=myName;
                             myTree = (yyval);
@@ -1792,7 +1792,7 @@ yyreduce:
     break;
 
   case 4:
-#line 42 "tiny.y"
+#line 42 "pas.y"
     {
                             (yyval) = (yyvsp[(1) - (2)]);
                             (yyval)->sibling=(yyvsp[(2) - (2)]);
@@ -1800,7 +1800,7 @@ yyreduce:
     break;
 
   case 5:
-#line 47 "tiny.y"
+#line 47 "pas.y"
     {
                             (yyval) = newDeclarationNode(DECL_ROUTINEHEAD);
                             (yyval) ->child[0]=(yyvsp[(1) - (4)]);
@@ -1811,21 +1811,21 @@ yyreduce:
     break;
 
   case 6:
-#line 55 "tiny.y"
+#line 55 "pas.y"
     {   
                             (yyval)=(yyvsp[(2) - (2)]); 
                         }
     break;
 
   case 7:
-#line 58 "tiny.y"
+#line 58 "pas.y"
     {   
                             (yyval) = NULL; 
                         }
     break;
 
   case 8:
-#line 63 "tiny.y"
+#line 63 "pas.y"
     {
                             YYSTYPE t = (yyvsp[(1) - (2)]);
                             if(t!=NULL){
@@ -1840,14 +1840,14 @@ yyreduce:
     break;
 
   case 9:
-#line 76 "tiny.y"
+#line 76 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]); 
                         }
     break;
 
   case 10:
-#line 81 "tiny.y"
+#line 81 "pas.y"
     {
                             (yyval) = newDeclarationNode(DECL_CONST);
                             (yyval)->attr.name = copyString((yyvsp[(1) - (4)])->attr.name);
@@ -1859,7 +1859,7 @@ yyreduce:
     break;
 
   case 11:
-#line 91 "tiny.y"
+#line 91 "pas.y"
     {
                             (yyval) = newExpNode(EXP_CONST);
                             (yyval)->type = EXPTYPE_INT;
@@ -1868,7 +1868,7 @@ yyreduce:
     break;
 
   case 12:
-#line 97 "tiny.y"
+#line 97 "pas.y"
     {
                             (yyval) = newExpNode(EXP_CONST);
                             (yyval)->type = EXPTYPE_REAL;
@@ -1877,7 +1877,7 @@ yyreduce:
     break;
 
   case 13:
-#line 103 "tiny.y"
+#line 103 "pas.y"
     {
                             (yyval) = newExpNode(EXP_CONST);
                             (yyval)->type = EXPTYPE_CHAR;
@@ -1886,7 +1886,7 @@ yyreduce:
     break;
 
   case 14:
-#line 109 "tiny.y"
+#line 109 "pas.y"
     {
                             (yyval) = newExpNode(EXP_CONST);
                             (yyval)->type=EXPTYPE_STRING;
@@ -1897,7 +1897,7 @@ yyreduce:
     break;
 
   case 15:
-#line 117 "tiny.y"
+#line 117 "pas.y"
     {
                             (yyval)=newExpNode(EXP_CONST);
                             (yyval)->type=EXPTYPE_BOOL;
@@ -1906,7 +1906,7 @@ yyreduce:
     break;
 
   case 16:
-#line 123 "tiny.y"
+#line 123 "pas.y"
     {
                             (yyval)=newExpNode(EXP_CONST);
                             (yyval)->type=EXPTYPE_BOOL;
@@ -1915,7 +1915,7 @@ yyreduce:
     break;
 
   case 17:
-#line 129 "tiny.y"
+#line 129 "pas.y"
     {
                             (yyval)=newExpNode(EXP_CONST);
                             (yyval)->type=EXPTYPE_INT;
@@ -1924,21 +1924,21 @@ yyreduce:
     break;
 
   case 18:
-#line 137 "tiny.y"
+#line 137 "pas.y"
     {   
                             (yyval)=(yyvsp[(2) - (2)]);
                         }
     break;
 
   case 19:
-#line 140 "tiny.y"
+#line 140 "pas.y"
     {   
                             (yyval)=NULL;
                         }
     break;
 
   case 20:
-#line 145 "tiny.y"
+#line 145 "pas.y"
     {
                             YYSTYPE t=(yyvsp[(1) - (2)]);
                             if(t!=NULL){
@@ -1953,14 +1953,14 @@ yyreduce:
     break;
 
   case 21:
-#line 157 "tiny.y"
+#line 157 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 22:
-#line 162 "tiny.y"
+#line 162 "pas.y"
     {   (yyval)=newDeclarationNode(DECL_TYPE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
@@ -1968,28 +1968,28 @@ yyreduce:
     break;
 
   case 23:
-#line 167 "tiny.y"
+#line 167 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 24:
-#line 170 "tiny.y"
+#line 170 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 25:
-#line 173 "tiny.y"
+#line 173 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 26:
-#line 179 "tiny.y"
+#line 179 "pas.y"
     {
                             (yyval)=newTypeNode(TYPE_ARRAY);
                             (yyval)->type=EXPTYPE_ARRAY;
@@ -2000,14 +2000,14 @@ yyreduce:
     break;
 
   case 27:
-#line 188 "tiny.y"
+#line 188 "pas.y"
     {   
                             (yyval)=(yyvsp[(2) - (3)]); 
                         }
     break;
 
   case 28:
-#line 193 "tiny.y"
+#line 193 "pas.y"
     {
                             YYSTYPE t=(yyvsp[(1) - (2)]);
                             if(t!=NULL){
@@ -2022,12 +2022,12 @@ yyreduce:
     break;
 
   case 29:
-#line 204 "tiny.y"
+#line 204 "pas.y"
     {(yyval)=(yyvsp[(1) - (1)]);}
     break;
 
   case 30:
-#line 207 "tiny.y"
+#line 207 "pas.y"
     {
                             (yyval)=newTypeNode(TYPE_RECORD);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
@@ -2036,7 +2036,7 @@ yyreduce:
     break;
 
   case 31:
-#line 214 "tiny.y"
+#line 214 "pas.y"
     {
                             YYSTYPE t=(yyvsp[(1) - (3)]);
                             if(t!=NULL){
@@ -2051,12 +2051,12 @@ yyreduce:
     break;
 
   case 32:
-#line 225 "tiny.y"
+#line 225 "pas.y"
     {   (yyval)=(yyvsp[(1) - (1)]); }
     break;
 
   case 33:
-#line 228 "tiny.y"
+#line 228 "pas.y"
     {
                             (yyval)=newTypeNode(TYPE_SIMPLE_ID);
                             (yyval)->attr.name = copyString((yyvsp[(1) - (1)])->attr.name);
@@ -2065,7 +2065,7 @@ yyreduce:
     break;
 
   case 34:
-#line 234 "tiny.y"
+#line 234 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_ENUM);
                             (yyval)->type=EXPTYPE_SIMPLE_ENUM;
                             (yyval)->child[0]=(yyvsp[(2) - (3)]);
@@ -2073,7 +2073,7 @@ yyreduce:
     break;
 
   case 35:
-#line 239 "tiny.y"
+#line 239 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_LIMIT);
                             (yyval)->type=EXPTYPE_SIMPLE_LIMIT;
                             (yyval)->child[0]=(yyvsp[(1) - (3)]);
@@ -2082,7 +2082,7 @@ yyreduce:
     break;
 
   case 36:
-#line 245 "tiny.y"
+#line 245 "pas.y"
     {
                             (yyval)=newTypeNode(TYPE_SIMPLE_LIMIT);
                             (yyval)->type=EXPTYPE_SIMPLE_LIMIT;
@@ -2093,7 +2093,7 @@ yyreduce:
     break;
 
   case 37:
-#line 253 "tiny.y"
+#line 253 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_LIMIT);
                             (yyval)->type=EXPTYPE_SIMPLE_LIMIT;
                             (yyval)->child[0]=(yyvsp[(2) - (5)]);
@@ -2104,7 +2104,7 @@ yyreduce:
     break;
 
   case 38:
-#line 261 "tiny.y"
+#line 261 "pas.y"
     {
                             (yyval)=newTypeNode(TYPE_SIMPLE_LIMIT);
                             (yyval)->type=EXPTYPE_SIMPLE_LIMIT;
@@ -2114,49 +2114,49 @@ yyreduce:
     break;
 
   case 39:
-#line 268 "tiny.y"
+#line 268 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_SYS);
                             (yyval)->type=EXPTYPE_INT;
                         }
     break;
 
   case 40:
-#line 272 "tiny.y"
+#line 272 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_SYS);
                             (yyval)->type=EXPTYPE_BOOL;
                         }
     break;
 
   case 41:
-#line 276 "tiny.y"
+#line 276 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_SYS);
                             (yyval)->type=EXPTYPE_REAL;
                         }
     break;
 
   case 42:
-#line 280 "tiny.y"
+#line 280 "pas.y"
     {   (yyval)=newTypeNode(TYPE_SIMPLE_SYS);
                             (yyval)->type=EXPTYPE_CHAR;
                         }
     break;
 
   case 43:
-#line 285 "tiny.y"
+#line 285 "pas.y"
     {   
                             (yyval) = NULL;
                         }
     break;
 
   case 44:
-#line 289 "tiny.y"
+#line 289 "pas.y"
     {   
                             (yyval)=(yyvsp[(2) - (2)]);
                         }
     break;
 
   case 45:
-#line 294 "tiny.y"
+#line 294 "pas.y"
     {   YYSTYPE t = (yyvsp[(1) - (2)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2170,14 +2170,14 @@ yyreduce:
     break;
 
   case 46:
-#line 304 "tiny.y"
+#line 304 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 47:
-#line 309 "tiny.y"
+#line 309 "pas.y"
     {   (yyval)=newDeclarationNode(DECL_VAR);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
                             (yyval)->child[1]=(yyvsp[(3) - (4)]);
@@ -2185,14 +2185,14 @@ yyreduce:
     break;
 
   case 48:
-#line 315 "tiny.y"
+#line 315 "pas.y"
     {   
                             (yyval)= NULL;
                         }
     break;
 
   case 49:
-#line 319 "tiny.y"
+#line 319 "pas.y"
     {   YYSTYPE t=(yyvsp[(1) - (2)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2206,7 +2206,7 @@ yyreduce:
     break;
 
   case 50:
-#line 330 "tiny.y"
+#line 330 "pas.y"
     {   YYSTYPE t=(yyvsp[(1) - (2)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2220,17 +2220,17 @@ yyreduce:
     break;
 
   case 51:
-#line 340 "tiny.y"
+#line 340 "pas.y"
     {(yyval)=(yyvsp[(1) - (1)]);}
     break;
 
   case 52:
-#line 341 "tiny.y"
+#line 341 "pas.y"
     {(yyval)=(yyvsp[(1) - (1)]);}
     break;
 
   case 53:
-#line 344 "tiny.y"
+#line 344 "pas.y"
     {
                             (yyval)=newDeclarationNode(DECL_FUNCTION);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
@@ -2239,12 +2239,12 @@ yyreduce:
     break;
 
   case 54:
-#line 351 "tiny.y"
+#line 351 "pas.y"
     {   myName=copyString(tokenString);}
     break;
 
   case 55:
-#line 353 "tiny.y"
+#line 353 "pas.y"
     {
                             (yyval)=newDeclarationNode(DECL_FUNCTIONHEAD);
                             (yyval)->attr.name=myName;
@@ -2254,7 +2254,7 @@ yyreduce:
     break;
 
   case 56:
-#line 361 "tiny.y"
+#line 361 "pas.y"
     {
                             (yyval)=newDeclarationNode(DECL_PROCEDURE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
@@ -2263,12 +2263,12 @@ yyreduce:
     break;
 
   case 57:
-#line 368 "tiny.y"
+#line 368 "pas.y"
     {   myName=copyString(tokenString);}
     break;
 
   case 58:
-#line 370 "tiny.y"
+#line 370 "pas.y"
     {   (yyval)=newDeclarationNode(DECL_PROCEDUREHEAD);
                             (yyval)->attr.name=myName;
                             (yyval)->child[0]=(yyvsp[(4) - (4)]);
@@ -2276,21 +2276,21 @@ yyreduce:
     break;
 
   case 59:
-#line 376 "tiny.y"
+#line 376 "pas.y"
     {
                             (yyval)=NULL;
                         }
     break;
 
   case 60:
-#line 380 "tiny.y"
+#line 380 "pas.y"
     {
                             (yyval)=(yyvsp[(2) - (3)]);
                         }
     break;
 
   case 61:
-#line 385 "tiny.y"
+#line 385 "pas.y"
     {   YYSTYPE t=(yyvsp[(1) - (3)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2304,14 +2304,14 @@ yyreduce:
     break;
 
   case 62:
-#line 396 "tiny.y"
+#line 396 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]); 
                         }
     break;
 
   case 63:
-#line 401 "tiny.y"
+#line 401 "pas.y"
     {
                             (yyval)=newDeclarationNode(DECL_VAR_PARA);
                             (yyval)->child[0]=(yyvsp[(2) - (4)]);
@@ -2320,7 +2320,7 @@ yyreduce:
     break;
 
   case 64:
-#line 407 "tiny.y"
+#line 407 "pas.y"
     {
                             (yyval)=newDeclarationNode(DECL_VAL_PARA);
                             (yyval)->child[0]=(yyvsp[(1) - (3)]);
@@ -2329,35 +2329,35 @@ yyreduce:
     break;
 
   case 65:
-#line 414 "tiny.y"
+#line 414 "pas.y"
     {   (yyval)=newExpNode(EXP_ID);
                             (yyval)->attr.name=copyString(tokenString);
                         }
     break;
 
   case 66:
-#line 417 "tiny.y"
+#line 417 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 67:
-#line 421 "tiny.y"
+#line 421 "pas.y"
     {
                             (yyval)=(yyvsp[(2) - (3)]);
                         }
     break;
 
   case 68:
-#line 426 "tiny.y"
+#line 426 "pas.y"
     {
                             (yyval)=NULL;
                         }
     break;
 
   case 69:
-#line 430 "tiny.y"
+#line 430 "pas.y"
     {
                             YYSTYPE t=(yyvsp[(1) - (3)]);
                             if(t!=NULL){
@@ -2372,14 +2372,14 @@ yyreduce:
     break;
 
   case 70:
-#line 443 "tiny.y"
+#line 443 "pas.y"
     {   
                             myNum= atoi(tokenString);
                         }
     break;
 
   case 71:
-#line 447 "tiny.y"
+#line 447 "pas.y"
     {
                             (yyval)=newStatementNode(STMT_LABEL);
                             (yyval)->attr.val=myNum;
@@ -2388,77 +2388,77 @@ yyreduce:
     break;
 
   case 72:
-#line 453 "tiny.y"
+#line 453 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 73:
-#line 457 "tiny.y"
+#line 457 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 74:
-#line 460 "tiny.y"
+#line 460 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 75:
-#line 463 "tiny.y"
+#line 463 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 76:
-#line 466 "tiny.y"
+#line 466 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 77:
-#line 469 "tiny.y"
+#line 469 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 78:
-#line 472 "tiny.y"
+#line 472 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 79:
-#line 475 "tiny.y"
+#line 475 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 80:
-#line 478 "tiny.y"
+#line 478 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 81:
-#line 481 "tiny.y"
+#line 481 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 82:
-#line 486 "tiny.y"
+#line 486 "pas.y"
     {   (yyval)=newStatementNode(STMT_ASSIGN);
                             (yyval)->child[0]=(yyvsp[(1) - (3)]);
                             (yyval)->child[1]=(yyvsp[(3) - (3)]);
@@ -2467,7 +2467,7 @@ yyreduce:
     break;
 
   case 83:
-#line 492 "tiny.y"
+#line 492 "pas.y"
     {   (yyval)=newStatementNode(STMT_ASSIGN);
                             (yyval)->child[0]=(yyvsp[(1) - (6)]);
                             ((yyval)->child[0])->child[0]=(yyvsp[(3) - (6)]);
@@ -2477,7 +2477,7 @@ yyreduce:
     break;
 
   case 84:
-#line 500 "tiny.y"
+#line 500 "pas.y"
     {   (yyval)=newStatementNode(STMT_ASSIGN);
                             (yyval)->child[0]=(yyvsp[(1) - (5)]);
                             ((yyval)->child[0])->child[0]=(yyvsp[(3) - (5)]);
@@ -2487,14 +2487,14 @@ yyreduce:
     break;
 
   case 85:
-#line 508 "tiny.y"
+#line 508 "pas.y"
     {   (yyval)=newStatementNode(STMT_GOTO);
                             (yyval)->attr.val=atoi(tokenString);
                         }
     break;
 
   case 86:
-#line 513 "tiny.y"
+#line 513 "pas.y"
     {   (yyval)=newStatementNode(STMT_IF);
                             (yyval)->child[0]=(yyvsp[(2) - (5)]);
                             (yyval)->child[1]=(yyvsp[(4) - (5)]);
@@ -2503,21 +2503,21 @@ yyreduce:
     break;
 
   case 87:
-#line 519 "tiny.y"
+#line 519 "pas.y"
     {
                             (yyval)=NULL;
                         }
     break;
 
   case 88:
-#line 522 "tiny.y"
+#line 522 "pas.y"
     {
                             (yyval)=(yyvsp[(2) - (2)]);
                         }
     break;
 
   case 89:
-#line 527 "tiny.y"
+#line 527 "pas.y"
     {
                             (yyval)=newStatementNode(STMT_REPEAT);
                             (yyval)->child[0]=(yyvsp[(2) - (4)]);
@@ -2526,7 +2526,7 @@ yyreduce:
     break;
 
   case 91:
-#line 534 "tiny.y"
+#line 534 "pas.y"
     {   (yyval)=newStatementNode(STMT_WHILE);
                             (yyval)->child[0]=(yyvsp[(2) - (4)]);
                             (yyval)->child[1]=(yyvsp[(4) - (4)]);
@@ -2534,7 +2534,7 @@ yyreduce:
     break;
 
   case 92:
-#line 539 "tiny.y"
+#line 539 "pas.y"
     {   (yyval)=newStatementNode(STMT_CASE);
                             (yyval)->child[0]=(yyvsp[(2) - (5)]);
                             (yyval)->child[1]=(yyvsp[(4) - (5)]);
@@ -2542,7 +2542,7 @@ yyreduce:
     break;
 
   case 93:
-#line 544 "tiny.y"
+#line 544 "pas.y"
     {   YYSTYPE t=(yyvsp[(1) - (2)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2556,14 +2556,14 @@ yyreduce:
     break;
 
   case 94:
-#line 554 "tiny.y"
+#line 554 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 95:
-#line 559 "tiny.y"
+#line 559 "pas.y"
     {
                             (yyval)=newExpNode(EXP_CASE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
@@ -2572,7 +2572,7 @@ yyreduce:
     break;
 
   case 96:
-#line 565 "tiny.y"
+#line 565 "pas.y"
     {
                             (yyval)=newExpNode(EXP_CASE);
                             (yyval)->child[0]=(yyvsp[(1) - (4)]);
@@ -2581,7 +2581,7 @@ yyreduce:
     break;
 
   case 97:
-#line 571 "tiny.y"
+#line 571 "pas.y"
     {
                             (yyval)=newStatementNode(STMT_FOR);
                             (yyval)->child[0]=(yyvsp[(2) - (8)]);
@@ -2593,7 +2593,7 @@ yyreduce:
     break;
 
   case 98:
-#line 580 "tiny.y"
+#line 580 "pas.y"
     {
                             (yyval)=newStatementNode(STMT_FOR);
                             (yyval)->child[0]=(yyvsp[(2) - (8)]);
@@ -2605,14 +2605,14 @@ yyreduce:
     break;
 
   case 99:
-#line 589 "tiny.y"
+#line 589 "pas.y"
     {   (yyval)=newStatementNode(STMT_PROC_ID);
                             (yyval)->attr.name=copyString((yyvsp[(1) - (1)])->attr.name);
                         }
     break;
 
   case 100:
-#line 593 "tiny.y"
+#line 593 "pas.y"
     {   (yyval)=newStatementNode(STMT_PROC_ID);
                             (yyval)->attr.name=copyString((yyvsp[(1) - (4)])->attr.name);
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
@@ -2620,7 +2620,7 @@ yyreduce:
     break;
 
   case 101:
-#line 598 "tiny.y"
+#line 598 "pas.y"
     {
                             (yyval)=newStatementNode(STMT_PROC_SYS);
                             (yyval)->attr.op=TOKEN_READ;
@@ -2629,7 +2629,7 @@ yyreduce:
     break;
 
   case 102:
-#line 604 "tiny.y"
+#line 604 "pas.y"
     {   (yyval)=newStatementNode(STMT_PROC_SYS);
                             (yyval)->attr.op=TOKEN_WRITE;
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
@@ -2637,14 +2637,14 @@ yyreduce:
     break;
 
   case 103:
-#line 609 "tiny.y"
+#line 609 "pas.y"
     {   (yyval)=newStatementNode(STMT_PROC_SYS);
                             (yyval)->attr.op=TOKEN_WRITELN;
                         }
     break;
 
   case 104:
-#line 613 "tiny.y"
+#line 613 "pas.y"
     {   (yyval)=newStatementNode(STMT_PROC_SYS);
                             (yyval)->attr.op=TOKEN_WRITELN;
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
@@ -2652,7 +2652,7 @@ yyreduce:
     break;
 
   case 105:
-#line 619 "tiny.y"
+#line 619 "pas.y"
     {   YYSTYPE t=(yyvsp[(1) - (3)]);
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
@@ -2666,133 +2666,133 @@ yyreduce:
     break;
 
   case 106:
-#line 629 "tiny.y"
+#line 629 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 107:
-#line 634 "tiny.y"
+#line 634 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_GE);
                         }
     break;
 
   case 108:
-#line 637 "tiny.y"
+#line 637 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_GT);
                         }
     break;
 
   case 109:
-#line 640 "tiny.y"
+#line 640 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_LE);
                         }
     break;
 
   case 110:
-#line 643 "tiny.y"
+#line 643 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_LT);
                         }
     break;
 
   case 111:
-#line 646 "tiny.y"
+#line 646 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_EQUAL);
                         }
     break;
 
   case 112:
-#line 649 "tiny.y"
+#line 649 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_UNEQUAL);
                         }
     break;
 
   case 113:
-#line 652 "tiny.y"
+#line 652 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 114:
-#line 657 "tiny.y"
+#line 657 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_PLUS);
                         }
     break;
 
   case 115:
-#line 660 "tiny.y"
+#line 660 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_MINUS);
                         }
     break;
 
   case 116:
-#line 663 "tiny.y"
+#line 663 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_OR);
                         }
     break;
 
   case 117:
-#line 666 "tiny.y"
+#line 666 "pas.y"
     {   
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 118:
-#line 671 "tiny.y"
+#line 671 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_MUL);
                         }
     break;
 
   case 119:
-#line 674 "tiny.y"
+#line 674 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_DIV);
                         }
     break;
 
   case 120:
-#line 677 "tiny.y"
+#line 677 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_MOD);
                         }
     break;
 
   case 121:
-#line 680 "tiny.y"
+#line 680 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(1) - (3)]),(yyvsp[(3) - (3)]),TOKEN_AND);
                         }
     break;
 
   case 122:
-#line 683 "tiny.y"
+#line 683 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 123:
-#line 689 "tiny.y"
+#line 689 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 124:
-#line 693 "tiny.y"
+#line 693 "pas.y"
     {   (yyval)=newExpNode(EXP_FUNC_ID);
                             (yyval)->attr.name=copyString((yyvsp[(1) - (4)])->attr.name);
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
@@ -2800,35 +2800,35 @@ yyreduce:
     break;
 
   case 125:
-#line 697 "tiny.y"
+#line 697 "pas.y"
     {
                             (yyval)=(yyvsp[(1) - (1)]);
                         }
     break;
 
   case 126:
-#line 700 "tiny.y"
+#line 700 "pas.y"
     {
                             (yyval)=(yyvsp[(2) - (3)]);
                         }
     break;
 
   case 127:
-#line 704 "tiny.y"
+#line 704 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(2) - (2)]),NULL,TOKEN_NOT);
                         }
     break;
 
   case 128:
-#line 708 "tiny.y"
+#line 708 "pas.y"
     {   
                             (yyval)=newExpressionNode((yyvsp[(2) - (2)]),NULL,TOKEN_MINUS);
                         }
     break;
 
   case 129:
-#line 712 "tiny.y"
+#line 712 "pas.y"
     {   (yyval)=(yyvsp[(1) - (4)]);
                             (yyval)->child[0]=(yyvsp[(3) - (4)]);
                             (yyval)->type=EXPTYPE_ARRAY;
@@ -2836,7 +2836,7 @@ yyreduce:
     break;
 
   case 130:
-#line 717 "tiny.y"
+#line 717 "pas.y"
     {   (yyval)=(yyvsp[(1) - (3)]);
                             (yyval)->child[0]=(yyvsp[(3) - (3)]);
                             (yyval)->type=EXPTYPE_RECORD;
@@ -2844,56 +2844,56 @@ yyreduce:
     break;
 
   case 131:
-#line 722 "tiny.y"
+#line 722 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_ABS,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 132:
-#line 726 "tiny.y"
+#line 726 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_CHR,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 133:
-#line 730 "tiny.y"
+#line 730 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_ODD,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 134:
-#line 734 "tiny.y"
+#line 734 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_ORD,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 135:
-#line 738 "tiny.y"
+#line 738 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_PRED,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 136:
-#line 742 "tiny.y"
+#line 742 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_SQR,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 137:
-#line 746 "tiny.y"
+#line 746 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_SQRT,(yyvsp[(3) - (4)]));
                         }
     break;
 
   case 138:
-#line 750 "tiny.y"
+#line 750 "pas.y"
     {   
                             (yyval)=newFuncSysExpNode(TOKEN_SUCC,(yyvsp[(3) - (4)]));
                         }
@@ -3115,7 +3115,7 @@ yyreturn:
 }
 
 
-#line 754 "tiny.y"
+#line 754 "pas.y"
 
 
 TreeNode * parse(){

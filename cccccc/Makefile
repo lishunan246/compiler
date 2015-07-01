@@ -1,6 +1,6 @@
-a.out : tiny.l tiny.y  code_generator.h analyze.h symtab.h util.cpp main.cpp
-	flex tiny.l
-	yacc -d tiny.y
+a.out : pas.l pas.y  code_generator.h analyze.h symtab.h util.cpp main.cpp
+	flex pas.l
+	yacc -d pas.y
 	g++ -std=c++11 util.cpp lex.yy.c y.tab.c main.cpp code_generator.cpp analyze.cpp symtab.cpp -L "/usr/local/Cellar/flex/2.5.39/lib" -lfl -o a.out
 
 clean :
