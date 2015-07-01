@@ -5,7 +5,7 @@
 #include <iostream>
 
 using namespace std;
-char filename[30] = "test2";
+
 FILE * source;
 bool TraceScan = true;
 int lineno=0;
@@ -13,6 +13,7 @@ TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
+	char filename[30] = "test2";
 	if(argc==2)
 	{
 		cout<<"Opening: "<<argv[1]<<endl;
