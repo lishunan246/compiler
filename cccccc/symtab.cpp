@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "symtab.h"
-#include "analyze.h"
-
-#include <iostream>
-#include <string>
-#include <map>
 
 const int ERROR_RETURN = 0xffff;
 int currentNestLevel = 0;
