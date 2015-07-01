@@ -5,8 +5,9 @@
 #include <iostream>
 #include <string>
 using namespace std;
-char filename[] = "test2";
-char asmFileName[] = "out.asm";
+
+
+
 FILE * source;
 bool TraceScan = true;
 int lineno=0;
@@ -14,6 +15,9 @@ TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
+	char filename[] = "test2";
+	char asmFileName[] = "out.asm";
+	
 	if(argc==2)
 	{
 		cout<<"Opening: "<<argv[1]<<endl;
