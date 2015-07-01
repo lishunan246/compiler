@@ -5,3 +5,4 @@ cccccc/lex.yy.c
 cccccc/lex.yy.cc
 cccccc/y.tab.c
 cccccc/y.tab.h
+cccccc/*.asm
