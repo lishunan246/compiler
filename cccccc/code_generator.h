@@ -1,5 +1,5 @@
-#ifndef _CG_H_
-#define _CG_H_
+#ifndef _CODE_GENERATOR_H_
+#define _CODE_GENERATOR_H_
 
 #include "util.h"
 #include "y.tab.h"

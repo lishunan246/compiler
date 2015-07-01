@@ -1,4 +1,4 @@
-#include "CG.h"
+#include "code_generator.h"
 
 FILE* codename = NULL;
 FILE* dataname = NULL;

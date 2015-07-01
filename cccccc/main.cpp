@@ -7,7 +7,7 @@
 //
 
 #include "util.h"
-#include "CG.h"
+#include "code_generator.h"
 #include "symtab.h"
 #include "analyze.h"
 #include <iostream>
