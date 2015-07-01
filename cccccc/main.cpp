@@ -1,3 +1,11 @@
+//
+//  main.cpp
+//  cccccc
+//
+//  Created by 张鹏程 on 15/6/20.
+//  Copyright (c) 2015年 amrzs. All rights reserved.
+//
+
 #include "util.h"
 #include "CG.h"
 #include "symtab.h"
@@ -6,8 +14,6 @@
 #include <string>
 using namespace std;
 
-
-
 FILE * source;
 bool traceLine = true;
 int lineno=0;
@@ -15,7 +21,7 @@ TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
-	char filename[] = "test002.pas";
+	char filename[] = "test.pas";
 	char asmFileName[] = "out.asm";
 
 	if(argc==2)
@@ -41,7 +47,6 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-
     CG_main(syntaxTree, asmFileName);
 
     return 0;

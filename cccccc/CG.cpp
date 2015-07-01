@@ -141,7 +141,6 @@ void CGExpId(TreeNode* pnode){
 	ExpType cgtype;
 	LookupRet st_var;
 
-
 	VariableList ssvar=findVarList(pnode->attr.name);
  	if (ssvar==NULL){
  		printf("Error in Line %d: Variable not existed.\n",pnode->lineno);
@@ -153,7 +152,7 @@ void CGExpId(TreeNode* pnode){
 	if (cgtype==EXPTYPE_ARRAY){  // array type
 
 		if (ssvar->pAttr==NULL){
- 			printf("Error in Line %d: not an array.\n",pnode->lineno,pnode->attr.name);
+ 			printf("Error in Line %d: not an array.\n",pnode->lineno);
  			fflush(stdout);
  		}
 
@@ -342,7 +341,7 @@ char* GetLabel()
 	static char label[2000];
 	char tp[2000];
 	strcpy(label, "__CG__label");
-	sprintf(tmp2, "%d", count);
+	sprintf(tp, "%d", count);
 	strcat(label, tp);
 	count++;
 	return label;
