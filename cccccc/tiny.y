@@ -3,7 +3,6 @@
 #include "global.h"
 #include "util.h"
 #include "scan.h"
-#include "parse.h"
 #define YYSTYPE TreeNode *
 static char * savedName;
 static int savedLineNo;
