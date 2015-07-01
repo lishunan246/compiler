@@ -8,28 +8,10 @@
 #include <string>
 #include <map>
 
-#define ERROR_RETURN 0xffff
-
-/*define size of the hash table*/
-#define SIZE 211
-
+const int ERROR_RETURN = 0xffff;
 int currentNestLevel = 0;
 
-/*the hash function*/
-static int hash (char* key) {
-	int temp = 0;
-	int i = 0;
-	while(key[i] != '\0') {
-		temp = ((temp << 4) + key[i]) % SIZE;
-		++i;
-	}
-
-	return temp;
-}
-
-
 // **** define symbols of var, type, func and proc
-
 // symbol map of var and const
 static std::map<std::string, VariableList> variableMap;
 
@@ -42,10 +24,6 @@ static std::map<std::string, ProcList> procMap;
 
 /*record the total offset of each scope*/
 static int totalOffset[50];
-
-
-
-/*=========================定义对符号表的插入操作=================================*/
 
 // sub-bound def
 SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
@@ -319,7 +297,7 @@ VariableList varListLookup(char* name) {
     return NULL;
 }
 
-FuncList funcListLookup(char* name) {
+FuncList findFuncList(char* name) {
     if (funcMap.count(std::string(name)) > 0) {
         return funcMap[std::string(name)];
     }
@@ -388,21 +366,19 @@ LookupRet recordLookup(char* rec, char* a) {
 }
 
 
-/*===================定义进出函数或过程时对符号表的更新==========================*/
 
-/*initialize*/
+// **** update symbol when step into func or proc
+
 void initScope() {
 	currentNestLevel = -1;
 }
 
-/*enter p function or process scope*/
 int enterNewScope(TreeNode* t) {
 	currentNestLevel += 1;
 	totalOffset[currentNestLevel] = buildSymtab(t);
 	return 	totalOffset[currentNestLevel];
 }
 
-/*quit function or process scope*/
 int leaveScope() {
 	int tmp = currentNestLevel;
 	int retValue = totalOffset[currentNestLevel];
@@ -427,9 +403,6 @@ int leaveScope() {
     }
 	return retValue;
 }
-
-
-/*=======================定义对符号表的打印操作=================================*/
 
 // print symbol with some format
 void printSymTab(FILE* listing) {

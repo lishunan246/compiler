@@ -1,17 +1,16 @@
-#include "global.h"
 #include "util.h"
-#include "scan.h"
-#include "parse.h"
 #include "CG.h"
 #include "symtab.h"
 #include "analyze.h"
 #include <iostream>
-
+#include <string>
 using namespace std;
-char filename[30] = "test2";
+char filename[] = "test2";
+char asmFileName[] = "out.asm";
 FILE * source;
 bool TraceScan = true;
 int lineno=0;
+TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
@@ -38,7 +37,8 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-	CG_main(syntaxTree, "out.asm");
+    
+    CG_main(syntaxTree, asmFileName);
 
     return 0;
 }

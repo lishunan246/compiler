@@ -2,7 +2,7 @@
 #define _CG_H_
 
 #include <stdio.h>
-#include "global.h"
+#include "util.h"
 #include "y.tab.h"
 #include "analyze.h"
 #include "symtab.h"

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "global.h"
 #include "util.h"
+#define ENDFILE 0
 
 void printToken(TokenType token, const char * tokenString){
     switch(token){
@@ -214,7 +214,7 @@ char* copyString(char *s){
     char *t;
     if(s==NULL)
       return NULL;
-    n=strlen(s)+1;
+    n = (int)strlen(s)+1;
     t=(char*)malloc(n);
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
@@ -266,6 +266,9 @@ void printTree(TreeNode * tree){
                             case EXPTYPE_REAL: std::cout<<"const real:"<<tree->attr.real_val<<std::endl; break;
                             case EXPTYPE_CHAR: std::cout<<"const char:"<<tree->attr.char_val<<std::endl; break;
                             case EXPTYPE_STRING: std::cout<<"const string:"<<tree->attr.string_val<<std::endl; break;
+                            default:
+                                printf("error type\n");
+                                break;
                         }
                         break;
                     case EXP_ID: std::cout<<"Exp ID: "<<tree->attr.name<<std::endl;break;
@@ -296,9 +299,14 @@ void printTree(TreeNode * tree){
                     case TYPE_SIMPLE_SYS:
                         switch(tree->type){
                             case EXPTYPE_INT:std::cout<<"type integer"<<std::endl;break;
-                            case EXPTYPE_REAL:std::cout<<"type real"<<std::endl;break;
-                            case EXPTYPE_CHAR:std::cout<<"type char"<<std::endl;break;
+                            case EXPTYPE_REAL:std::cout<<"type real"<<std::endl;
+                                break;
+                            case EXPTYPE_CHAR:std::cout<<"type char"<<std::endl;
+                                break;
                             case EXPTYPE_BOOL:std::cout<<"type boolean"<<std::endl;break;
+                            default:
+                                printf("error type");
+                                break;
                         }
                     break;
                     case TYPE_SIMPLE_ID: std::cout<<"type id"<<std::endl; break;
@@ -319,20 +327,3 @@ void printTree(TreeNode * tree){
     }
     UNINDENT;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
