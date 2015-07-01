@@ -13,8 +13,6 @@
 /*define size of the hash table*/
 #define SIZE 211
 
-/*define parameter offset increase*/
-#define PARA_OFFSET_INC 4
 
 /*define SHIFT, use 2^SHIFT as multiplier in hash function*/
 #define SHIFT 4
@@ -42,6 +40,8 @@ static int hash (char* key) {
 
 /*the hash table of variables*/
 static VariableList variableHashTable[SIZE];
+
+static std::map<std::string,VariableList> variableMap;
 
 // symbol map of type define
 static std::map<std::string, TypeList> typeMap;
@@ -181,7 +181,7 @@ int procListInsert(TreeNode* procHead) {
 		}
 
 		varListInsert(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, False, paraNestLevel, NULL, procHead->lineno, 0, offset);
-		offset = offset + PARA_OFFSET_INC;
+		offset = offset + OFFSET_INC;
 
 		tmpNode = procHead->child[0]->sibling;
 		tmpList = paraList;
@@ -192,7 +192,7 @@ int procListInsert(TreeNode* procHead) {
 				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False);
 
 			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
-			offset = offset + PARA_OFFSET_INC;
+			offset = offset + OFFSET_INC;
 
 			tmpNode = tmpNode->sibling;
 		}
@@ -233,7 +233,7 @@ int funcListInsert(TreeNode* funcHead) {
 			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, False);
 		}
 		varListInsert(funcHead->child[0]->child[0]->attr.name,funcHead->child[0]->child[1]->type, False, paraNestLevel, NULL, funcHead->lineno, 0, offset);
-		offset = offset + PARA_OFFSET_INC;
+		offset = offset + OFFSET_INC;
 
 		tmpNode = funcHead->child[0]->sibling;
 		tmpList = paraList;
@@ -244,7 +244,7 @@ int funcListInsert(TreeNode* funcHead) {
 				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False);
 
 			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
-			offset = offset + PARA_OFFSET_INC;
+			offset = offset + OFFSET_INC;
 
 			tmpNode = tmpNode->sibling;
 		}
@@ -252,7 +252,7 @@ int funcListInsert(TreeNode* funcHead) {
 
 	//符号表插入返回值,与函数同名
 	varListInsert(funcHead->attr.name, retType, False, paraNestLevel, NULL, funcHead->lineno, 0, offset);
-	offset = offset + PARA_OFFSET_INC;
+	offset = offset + OFFSET_INC;
     
     FuncList tmpFunc = (FuncList) malloc(sizeof(struct FuncListRec));
     tmpFunc->name = name;
