@@ -1,4 +1,4 @@
-#include "CG.h"
+#include "CG.h" f
 
 FILE* codename = NULL;
 FILE* dataname = NULL;
@@ -339,13 +339,13 @@ void CGStmtAssign(TreeNode* pnode){
 
 char* GetLabel()
 {
-	static int count = 0;
-	static char label[2000];
-	char tp[2000];
+	static int label_cnt = 0;
+	char tmp2[1024];
+	static char label[1024];
 	strcpy(label, "__CG__label");
-	sprintf(tmp2, "%d", count);
-	strcat(label, tp);
-	count++;
+	sprintf(tmp2, "%d", label_cnt);
+	strcat(label, tmp2);
+	label_cnt++;
 	return label;
 }
 
@@ -443,17 +443,17 @@ void CGStmtWhile(TreeNode* pnode){
 
 
 void CGStmtRepeat(TreeNode* pnode){
-	char start[100];
-	strcpy(start, GetLabel());
+	char repeat_start[100];
+	strcpy(repeat_start, GetLabel());
 	
-	sprintf(tmp,"%s:\n",start);
+	sprintf(tmp,"%s:\n",repeat_start);
 	CG_OUTPUT(tmp);	
 
 	GenerateCode(pnode->child[0]);
 	GenerateCode(pnode->child[1]);
 
 	CG_OUTPUT("cmp eax, 0\n");
-	sprintf(tmp,"je %s\n",start);
+	sprintf(tmp,"je %s\n",repeat_start);
 	CG_OUTPUT(tmp);
 	
 }
@@ -550,42 +550,40 @@ void CGStmtIf(TreeNode* pnode){
 }
 
 void GStmtOutput(TreeNode* pnode){
-	TreeNode *node = pnode->child[0];
-	while (node!=NULL){
-		CGNodeExpression(node);
-        switch(node->RuningType){
-            case EXPTYPE_REAL:
-            CG_OUTPUT("pusha\n");
+	TreeNode *tt = pnode->child[0];
+	while (tt!=NULL){
+		CGNodeExpression(tt);	
+
+		if (tt->RuningType==EXPTYPE_REAL){
+			CG_OUTPUT("pusha\n");
 			CG_OUTPUT("push eax\n");
 			CG_OUTPUT("fld dword ptr [esp]\n");
 			CG_OUTPUT("sub esp, 4\n");
 			CG_OUTPUT("fstp qword ptr [esp]\n");
-			if(pnode->attr.op==TOKEN_WRITELN){
+			if  (pnode->attr.op==TOKEN_WRITELN){
 				CG_OUTPUT("push offset lb_writeln_real\n");
 			}
-			else if(pnode->attr.op==TOKEN_WRITE){
+			else {
 				CG_OUTPUT("push offset lb_write_real\n");
 			}
 			CG_OUTPUT("call printf\n");
 			CG_OUTPUT("add esp, 8\n");
 			CG_OUTPUT("pop eax\n");
 			CG_OUTPUT("popa\n");
-            break;
-            case EXPTYPE_INT:
-            CG_OUTPUT("pusha\n");
-            if(pnode->attr.op==TOKEN_WRITELN){
-				CG_OUTPUT("push offset lb_writeln_real\n");
+		}
+		else if (tt->RuningType==EXPTYPE_INT){
+			CG_OUTPUT("pusha\n");
+			if  (pnode->attr.op==TOKEN_WRITELN){
+				CG_OUTPUT("invoke printf,offset lb_writeln_int, eax\n");
 			}
-			else if(pnode->attr.op==TOKEN_WRITE){
-				CG_OUTPUT("push offset lb_write_real\n");
+			else{
+				CG_OUTPUT("invoke printf,offset lb_write_int, eax\n");
 			}
-            CG_OUTPUT("popa\n");
-            break;
-            default:
-                break;
-        }
-		node=node->sibling;
+			CG_OUTPUT("popa\n");
+		}
+		tt=tt->sibling;
 	}
+	
 }
 
 
@@ -642,7 +640,7 @@ void CGNodeExpression(TreeNode* pnode){
             break;
     }
 }
-void Write_Read(TreeNode* pnode){
+void Write_Read(TreeNode* pnode,){
     if(pnode->attr.op==TOKEN_WRITE)
         GStmtOutput(pnode);//Write
     else if(pnode->attr.op==TOKEN_READ)

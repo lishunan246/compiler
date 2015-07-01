@@ -9,6 +9,12 @@
 
 #define CG_OUTPUT(asm) fprintf(codename, "%s", asm);
 #define CG_OUTPUT_DATA(asm) fprintf(dataname, "%s", asm);
+/*inline Code_Out(char* in){
+    fprintf(codename, "%s", in);
+}
+inline Data_Out(char* in){
+    fprintf(dataname, "%s", in)
+}*/
 
 int CG_main(TreeNode* pnode,char * ffname);
 
@@ -40,6 +46,7 @@ void CGStmtCase(TreeNode* pnode);
 void GStmtOutput(TreeNode* pnode);
 void GStmtInput(TreeNode* pnode);
 void CGNodeExpression(TreeNode* pnode);
+void Write_Read(TreeNode* pnode);
 void GenerateCode(TreeNode* pnode);
 
 #endif
