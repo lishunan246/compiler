@@ -14,9 +14,6 @@
 #define SIZE 211
 
 
-/*define SHIFT, use 2^SHIFT as multiplier in hash function*/
-#define SHIFT 4
-
 /*define enum type max length*/
 #define ID_MAX_LEN 10
 
@@ -27,7 +24,7 @@ static int hash (char* key) {
 	int temp = 0;
 	int i = 0;
 	while(key[i] != '\0') {
-		temp = ((temp << SHIFT) + key[i]) % SIZE;
+		temp = ((temp << 4) + key[i]) % SIZE;
 		++i;
 	}
 
