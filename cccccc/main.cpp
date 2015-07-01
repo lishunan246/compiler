@@ -1,6 +1,5 @@
 #include "global.h"
 #include "util.h"
-#include "scan.h"
 #include "CG.h"
 #include "symtab.h"
 #include "analyze.h"

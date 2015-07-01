@@ -12,11 +12,16 @@
 
 #define MAXCHILDREN 4
 #define MAXRESERVED 8
+#define MAXTOKENLEN 40
 typedef int TokenType;
 extern FILE* source;
 
 extern int lineno;
 extern bool TraceScan;
+extern char tokenString[MAXTOKENLEN+1];
+extern char previoustokenString[MAXTOKENLEN+1];
+
+//TokenType getToken();
 
 
 

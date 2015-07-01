@@ -2,13 +2,14 @@
 #define YYPARSER
 #include "global.h"
 #include "util.h"
-#include "scan.h"
 #define YYSTYPE TreeNode *
 static char * savedName;
 static int savedLineNo;
 static TreeNode* savedTree;
 static int savedNum;
 static int level=0;
+TokenType getToken();
+
 int yyparse();
 static int yylex(){
     return getToken();

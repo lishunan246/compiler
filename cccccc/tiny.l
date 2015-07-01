@@ -1,7 +1,6 @@
 %{
 #include "global.h"
 #include "util.h"
-#include "scan.h"
 char previousTokenString[MAXTOKENLEN+1];
 char tokenString[MAXTOKENLEN+1];
 %}
