@@ -109,7 +109,8 @@
      TOKEN_PRED = 325,
      TOKEN_SQR = 326,
      TOKEN_SQRT = 327,
-     TOKEN_SUCC = 328
+     TOKEN_SUCC = 328,
+     TOKEN_READLN = 329
    };
 #endif
 /* Tokens.  */
@@ -184,6 +185,7 @@
 #define TOKEN_SQR 326
 #define TOKEN_SQRT 327
 #define TOKEN_SUCC 328
+#define TOKEN_READLN 329
 
 
 

@@ -17,7 +17,6 @@ static int yylex(){
 
 int yyerror(char* message) {
     fprintf(listing, "Syntax error at line %d: %s\n",lineno,message);
-   // printToken(yychar, tokenString);
     return 0;
 }
 
@@ -31,16 +30,25 @@ int yyerror(char* message) {
 %token TOKEN_ARRAY TOKEN_OF TOKEN_RECORD TOKEN_BEGIN TOKEN_END TOKEN_GOTO
 %token TOKEN_ID TOKEN_INT TOKEN_REAL TOKEN_CHAR TOKEN_STRING
 %token ERROR
-%token TOKEN_ABS TOKEN_CHR TOKEN_ODD TOKEN_ORD TOKEN_PRED TOKEN_SQR TOKEN_SQRT TOKEN_SUCC
+%token TOKEN_ABS TOKEN_CHR TOKEN_ODD TOKEN_ORD TOKEN_PRED TOKEN_SQR TOKEN_SQRT TOKEN_SUCC TOKEN_READLN
 %%
 
 program             :   TOKEN_PROGRAM TOKEN_ID
-                        {   savedName = copyString(tokenString); }
+                        {   
+                            savedName = copyString(tokenString);
+                        }
                         TOKEN_SEMI routine TOKEN_DOT
                         {   $$ = $5;
                             $$->attr.name=savedName;
                             savedTree = $$;
                         };
+/*
+program_head        :   TOKEN_PROGRAM TOKEN_ID
+                        {   
+                            savedName = copyString(tokenString);
+                        }
+                        TOKEN_SEMI 
+*/ 
 routine             :   routine_head routine_body
                         {
                             $$ = $1;
@@ -54,125 +62,13 @@ routine_head        :   const_part type_part var_part routine_part
                             $$ ->child[2]=$3;
                             $$ ->child[3]=$4;
                         };
-routine_part        :
-                        {   $$= NULL;}
-                    |   routine_part function_decl
-                        {   YYSTYPE t=$1;
-                            if(t!=NULL){
-                                while(t->sibling!=NULL)
-                                  t=t->sibling;
-                                t->sibling=$2;
-                                $$=$1;
-                            }
-                            else
-                                $$=$2;
+const_part          :   TOKEN_CONST const_expr_list
+                        {   
+                            $$=$2; 
                         }
-                    |   routine_part procedure_decl
-                        {   YYSTYPE t=$1;
-                            if(t!=NULL){
-                                while(t->sibling!=NULL)
-                                  t=t->sibling;
-                                t->sibling=$2;
-                                $$=$1;
-                            }
-                            else
-                                $$=$2;
-                        }
-                    |   function_decl   {$$=$1;}
-                    |   procedure_decl  {$$=$1;}
-                    ;
-function_decl       :   function_head TOKEN_SEMI routine TOKEN_SEMI
-                        {
-                            $$=newDeclNode(DECL_FUNCTION);
-                            $$->child[0]=$1;
-                            $$->child[1]=$3;
-                        }
-                    ;
-function_head       :   TOKEN_FUNCTION TOKEN_ID
-                        {   savedName=copyString(tokenString);}
-                        parameters  TOKEN_COLON simple_type_decl
-                        {
-                            $$=newDeclNode(DECL_FUNCTIONHEAD);
-                            $$->attr.name=savedName;
-                            $$->child[0]=$4;
-                            $$->child[1]=$6;
-                        }
-                    ;
-parameters          :
-                        {$$=NULL;}
-                    |   TOKEN_LP para_decl_list TOKEN_RP
-                        {$$=$2;}
-                    ;
-para_decl_list      :   para_decl_list  TOKEN_SEMI  para_type_list
-                        {   YYSTYPE t=$1;
-                            if(t!=NULL){
-                                while(t->sibling!=NULL)
-                                  t=t->sibling;
-                                t->sibling=$3;
-                                $$=$1;
-                            }
-                            else
-                                $$=$3;
-                        }
-                    |   para_type_list
-                        {   $$=$1; }
-                    ;
-para_type_list      :   TOKEN_VAR name_list TOKEN_COLON simple_type_decl
-                        {
-                            $$=newDeclNode(DECL_VAR_PARA);
-                            $$->child[0]=$2;
-                            $$->child[1]=$4;
-                        }
-                    |   name_list TOKEN_COLON simple_type_decl
-                        {
-                            $$=newDeclNode(DECL_VAL_PARA);
-                            $$->child[0]=$1;
-                            $$->child[1]=$3;
-                        }
-                    ;
-procedure_decl      :   procedure_head TOKEN_SEMI routine TOKEN_SEMI
-                        {
-                            $$=newDeclNode(DECL_PROCEDURE);
-                            $$->child[0]=$1;
-                            $$->child[1]=$3;
-                        }
-                    ;
-procedure_head      :   TOKEN_PROCEDURE TOKEN_ID
-                        {   savedName=copyString(tokenString);}
-                        parameters
-                        {   $$=newDeclNode(DECL_PROCEDUREHEAD);
-                            $$->attr.name=savedName;
-                            $$->child[0]=$4;
-                        }
-                    ;
-var_part            :
-                        {   $$ = NULL;}
-                    |   TOKEN_VAR var_decl_list
-                        {   $$=$2;}
-                    ;
-var_decl_list       :   var_decl_list var_decl
-                        {   YYSTYPE t = $1;
-                            if(t!=NULL){
-                                while(t->sibling!=NULL)
-                                  t=t->sibling;
-                                t->sibling=$2;
-                                $$=$1;
-                            }
-                            else
-                                $$=$2;
-                        }
-                    |   var_decl    {$$=$1;}
-                    ;
-var_decl            :   name_list TOKEN_COLON type_decl TOKEN_SEMI
-                        {   $$=newDeclNode(DECL_VAR);
-                            $$->child[0]=$1;
-                            $$->child[1]=$3;
-                        }
-                    ;
-const_part          :
-                        {   $$ = NULL; }
-                    |   TOKEN_CONST const_expr_list
-                        {   $$=$2; }
+                    |   {   
+                            $$ = NULL; 
+                        }  
                     ;
 const_expr_list     :   const_expr_list const_expr
                         {
@@ -188,7 +84,9 @@ const_expr_list     :   const_expr_list const_expr
                         }
 
                     |   const_expr
-                        {   $$=$1; }
+                        {   
+                            $$=$1; 
+                        }
                     ;
 const_expr          :    ID TOKEN_EQUAL const_value TOKEN_SEMI
                         {
@@ -245,9 +143,13 @@ const_value         :   TOKEN_INT
                         }
                     ;
 type_part           :
-                        {   $$=NULL;}
-                    |   TOKEN_TYPE type_decl_list
-                        {   $$=$2;}
+                        TOKEN_TYPE type_decl_list
+                        {   
+                            $$=$2;
+                        }
+                    |   {   
+                            $$=NULL;
+                        }
                     ;
 type_decl_list      :   type_decl_list  type_definition
                         {
@@ -262,7 +164,9 @@ type_decl_list      :   type_decl_list  type_definition
                               $$=$2;
                         }
                     |   type_definition
-                        {   $$=$1;}
+                        {   
+                            $$=$1;
+                        }
                     ;
 type_definition     :   ID TOKEN_EQUAL type_decl TOKEN_SEMI
                         {   $$=newDeclNode(DECL_TYPE);
@@ -270,12 +174,29 @@ type_definition     :   ID TOKEN_EQUAL type_decl TOKEN_SEMI
                             $$->child[1]=$3;
                         }
                     ;
-type_decl           :   simple_type_decl    {$$=$1;}
-                    |   array_type_decl     {$$=$1;}
-                    |   record_type_decl    {$$=$1;}
+type_decl           :   simple_type_decl    {
+                            $$=$1;
+                        }
+                    |   array_type_decl     {
+                            $$=$1;
+                        }
+                    |   record_type_decl    {
+                            $$=$1;
+                        }
+                    ;
+array_type_decl     :   TOKEN_ARRAY TOKEN_LB simple_type_decl TOKEN_RB TOKEN_OF 
+                        type_decl
+                        {
+                            $$=newTypeNode(TYPE_ARRAY);
+                            $$->child[0]=$3;
+                            $$->child[1]=$6;
+                            $$->type=EXPTYPE_ARRAY;
+                        }
                     ;
 record_type_decl    :   TOKEN_RECORD field_decl_list TOKEN_END
-                        {   $$=$2; }
+                        {   
+                            $$=$2; 
+                        }
                     ;
 field_decl_list     :   field_decl_list field_decl
                         {
@@ -298,13 +219,19 @@ field_decl          :   name_list TOKEN_COLON type_decl TOKEN_SEMI
                             $$->child[1]=$3;
                         }
                     ;
-array_type_decl     :   TOKEN_ARRAY TOKEN_LB simple_type_decl TOKEN_RB TOKEN_OF type_decl
+name_list           :   name_list TOKEN_COMMA ID
                         {
-                            $$=newTypeNode(TYPE_ARRAY);
-                            $$->child[0]=$3;
-                            $$->child[1]=$6;
-                            $$->type=EXPTYPE_ARRAY;
+                            YYSTYPE t=$1;
+                            if(t!=NULL){
+                                while(t->sibling!=NULL)
+                                  t=t->sibling;
+                                t->sibling=$3;
+                                $$=$1;
+                            }
+                            else
+                                $$=$1;
                         }
+                    |   ID {   $$=$1; }
                     ;
 simple_type_decl    :   ID
                         {
@@ -363,9 +290,108 @@ simple_type_decl    :   ID
                             $$->type=EXPTYPE_CHAR;
                         }
                     ;
-name_list           :   name_list TOKEN_COMMA ID
+var_part            :
+                        {   
+                            $$ = NULL;
+                        }
+                    |   TOKEN_VAR var_decl_list
+                        {   
+                            $$=$2;
+                        }
+                    ;
+var_decl_list       :   var_decl_list var_decl
+                        {   YYSTYPE t = $1;
+                            if(t!=NULL){
+                                while(t->sibling!=NULL)
+                                  t=t->sibling;
+                                t->sibling=$2;
+                                $$=$1;
+                            }
+                            else
+                                $$=$2;
+                        }
+                    |   var_decl    {
+                            $$=$1;
+                        }
+                    ;
+var_decl            :   name_list TOKEN_COLON type_decl TOKEN_SEMI
+                        {   $$=newDeclNode(DECL_VAR);
+                            $$->child[0]=$1;
+                            $$->child[1]=$3;
+                        }
+                    ;
+routine_part        :
+                        {   
+                            $$= NULL;
+                        }
+                    |   routine_part function_decl
+                        {   YYSTYPE t=$1;
+                            if(t!=NULL){
+                                while(t->sibling!=NULL)
+                                  t=t->sibling;
+                                t->sibling=$2;
+                                $$=$1;
+                            }
+                            else
+                                $$=$2;
+                        }
+                    |   routine_part procedure_decl
+                        {   YYSTYPE t=$1;
+                            if(t!=NULL){
+                                while(t->sibling!=NULL)
+                                  t=t->sibling;
+                                t->sibling=$2;
+                                $$=$1;
+                            }
+                            else
+                                $$=$2;
+                        }
+                    |   function_decl   {$$=$1;}
+                    |   procedure_decl  {$$=$1;}
+                    ;
+function_decl       :   function_head TOKEN_SEMI routine TOKEN_SEMI
                         {
-                            YYSTYPE t=$1;
+                            $$=newDeclNode(DECL_FUNCTION);
+                            $$->child[0]=$1;
+                            $$->child[1]=$3;
+                        }
+                    ;
+function_head       :   TOKEN_FUNCTION TOKEN_ID
+                        {   savedName=copyString(tokenString);}
+                        parameters  TOKEN_COLON simple_type_decl
+                        {
+                            $$=newDeclNode(DECL_FUNCTIONHEAD);
+                            $$->attr.name=savedName;
+                            $$->child[0]=$4;
+                            $$->child[1]=$6;
+                        }
+                    ;
+procedure_decl      :   procedure_head TOKEN_SEMI routine TOKEN_SEMI
+                        {
+                            $$=newDeclNode(DECL_PROCEDURE);
+                            $$->child[0]=$1;
+                            $$->child[1]=$3;
+                        }
+                    ;
+procedure_head      :   TOKEN_PROCEDURE TOKEN_ID
+                        {   savedName=copyString(tokenString);}
+                        parameters
+                        {   $$=newDeclNode(DECL_PROCEDUREHEAD);
+                            $$->attr.name=savedName;
+                            $$->child[0]=$4;
+                        }
+                    ;
+parameters          :
+                        {
+                            $$=NULL;
+                        }
+                    |   TOKEN_LP para_decl_list TOKEN_RP
+                        {
+                            $$=$2;
+                        }
+                    ;
+para_decl_list      :   para_decl_list  TOKEN_SEMI  para_type_list
+                        {   YYSTYPE t=$1;
                             if(t!=NULL){
                                 while(t->sibling!=NULL)
                                   t=t->sibling;
@@ -373,18 +399,42 @@ name_list           :   name_list TOKEN_COMMA ID
                                 $$=$1;
                             }
                             else
-                                $$=$1;
+                                $$=$3;
                         }
-                    |   ID {   $$=$1; }
+                    |   para_type_list
+                        {   
+                            $$=$1; 
+                        }
+                    ;
+para_type_list      :   TOKEN_VAR name_list TOKEN_COLON simple_type_decl
+                        {
+                            $$=newDeclNode(DECL_VAR_PARA);
+                            $$->child[0]=$2;
+                            $$->child[1]=$4;
+                        }
+                    |   name_list TOKEN_COLON simple_type_decl
+                        {
+                            $$=newDeclNode(DECL_VAL_PARA);
+                            $$->child[0]=$1;
+                            $$->child[1]=$3;
+                        }
                     ;
 ID                  :   TOKEN_ID
                         {   $$=newExpNode(EXP_ID);
                             $$->attr.name=copyString(tokenString);
                         } ;
-routine_body        :   compound_stmt   {$$=$1;} ;
-compound_stmt       :   TOKEN_BEGIN stmt_list TOKEN_END {$$=$2;} ;
+routine_body        :   compound_stmt   {
+                            $$=$1;
+                        } 
+                    ;
+compound_stmt       :   TOKEN_BEGIN stmt_list TOKEN_END {
+                            $$=$2;
+                        }
+                    ;
 stmt_list           :
-                        {$$=NULL;}
+                        {
+                            $$=NULL;
+                        }
                     |   stmt_list stmt TOKEN_SEMI
                         {
                             YYSTYPE t=$1;
@@ -399,7 +449,9 @@ stmt_list           :
                         }
                     ;
 stmt                :   TOKEN_INT
-                        {   savedNum= atoi(tokenString);}
+                        {   
+                            savedNum= atoi(tokenString);
+                        }
                         TOKEN_COLON no_label_stmt
                         {
                             $$=newStmtNode(STMT_LABEL);
@@ -407,17 +459,38 @@ stmt                :   TOKEN_INT
                             $$->child[0]=$4;
                         }
                     |   no_label_stmt
-                        {   $$=$1;}
+                        {   
+                            $$=$1;
+                        }
                     ;
-no_label_stmt       :   assign_stmt {$$=$1;}
-                    |   compound_stmt   {$$=$1;}
-                    |   goto_stmt   {$$=$1;}
-                    |   if_stmt     {$$=$1;}
-                    |   repeat_stmt {$$=$1;}
-                    |   while_stmt  {$$=$1;}
-                    |   case_stmt   {$$=$1;}
-                    |   for_stmt    {$$=$1;}
-                    |   proc_stmt   {$$=$1;};
+no_label_stmt       :   assign_stmt {
+                            $$=$1;
+                        }
+                    |   compound_stmt   {
+                            $$=$1;
+                        }
+                    |   goto_stmt   {
+                            $$=$1;
+                        }
+                    |   if_stmt     {
+                            $$=$1;
+                        }
+                    |   repeat_stmt {
+                            $$=$1;
+                        }
+                    |   while_stmt  {
+                            $$=$1;
+                        }
+                    |   case_stmt   {
+                            $$=$1;
+                        }
+                    |   for_stmt    {
+                            $$=$1;
+                        }
+                    |   proc_stmt   {
+                            $$=$1;
+                        }
+                    ;
 assign_stmt         :   ID TOKEN_ASSIGN expression
                         {   $$=newStmtNode(STMT_ASSIGN);
                             $$->child[0]=$1;
@@ -452,8 +525,12 @@ if_stmt             :   TOKEN_IF expression TOKEN_THEN stmt  else_clause
                             $$->child[2]=$5;
                         }
                     ;
-else_clause         :   {$$=NULL;}
-                    |   TOKEN_ELSE  stmt    {$$=$2;}
+else_clause         :   {
+                            $$=NULL;
+                        }
+                    |   TOKEN_ELSE  stmt    {
+                            $$=$2;
+                        }
                     ;
 repeat_stmt         :   TOKEN_REPEAT stmt_list TOKEN_UNTIL expression
                         {
@@ -483,7 +560,10 @@ case_expr_list      :   case_expr_list  case_expr
                             else
                                 $$=$2;
                         }
-                    |   case_expr   {$$=$1;};
+                    |   case_expr   {
+                            $$=$1;
+                        }
+                        ;
 case_expr           :   const_value TOKEN_COLON stmt TOKEN_SEMI
                         {
                             $$=newExpNode(EXP_CASE);
@@ -542,7 +622,8 @@ proc_stmt           :   ID
                         {   $$=newStmtNode(STMT_PROC_SYS);
                             $$->attr.op=TOKEN_WRITELN;
                             $$->child[0]=$3;
-                        };
+                        }
+                    ;
 args_list           :   args_list TOKEN_COMMA expression
                         {   YYSTYPE t=$1;
                             if(t!=NULL){
@@ -554,41 +635,87 @@ args_list           :   args_list TOKEN_COMMA expression
                             else
                                 $$=$3;
                         }
-                    |   expression  {$$=$1;};
+                    |   expression  {
+                            $$=$1;
+                        }
+                    ;
 
-expression          :   expression TOKEN_GE expr {   $$=newOpExpNode($1,$3,TOKEN_GE); }
-                    |   expression TOKEN_GT expr {   $$=newOpExpNode($1,$3,TOKEN_GT); }
-                    |   expression TOKEN_LE expr {   $$=newOpExpNode($1,$3,TOKEN_LE); }
-                    |   expression TOKEN_LT expr {   $$=newOpExpNode($1,$3,TOKEN_LT); }
-                    |   expression TOKEN_EQUAL expr {   $$=newOpExpNode($1,$3,TOKEN_EQUAL); }
-                    |   expression TOKEN_UNEQUAL expr {   $$=newOpExpNode($1,$3,TOKEN_UNEQUAL); }
-                    |   expr {   $$=$1;} ;
+expression          :   expression TOKEN_GE expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_GE); 
+                        }
+                    |   expression TOKEN_GT expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_GT); 
+                        }
+                    |   expression TOKEN_LE expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_LE); 
+                        }
+                    |   expression TOKEN_LT expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_LT); 
+                        }
+                    |   expression TOKEN_EQUAL expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_EQUAL); 
+                        }
+                    |   expression TOKEN_UNEQUAL expr {   
+                            $$=newOpExpNode($1,$3,TOKEN_UNEQUAL); 
+                        }
+                    |   expr {   
+                            $$=$1;
+                        } 
+                    ;
 
-expr                :   expr TOKEN_PLUS term  {   $$=newOpExpNode($1,$3,TOKEN_PLUS); }
-                    |   expr TOKEN_MINUS term  {   $$=newOpExpNode($1,$3,TOKEN_MINUS); }
-                    |   expr TOKEN_OR term  {   $$=newOpExpNode($1,$3,TOKEN_OR); }
-                    |   term {   $$=$1;} ;
+expr                :   expr TOKEN_PLUS term  {   
+                            $$=newOpExpNode($1,$3,TOKEN_PLUS); 
+                        }
+                    |   expr TOKEN_MINUS term  {   
+                            $$=newOpExpNode($1,$3,TOKEN_MINUS); 
+                        }
+                    |   expr TOKEN_OR term  {   
+                            $$=newOpExpNode($1,$3,TOKEN_OR); 
+                        }
+                    |   term {   
+                            $$=$1;
+                        } 
+                    ;
 
-term                :   term TOKEN_MUL factor {   $$=newOpExpNode($1,$3,TOKEN_MUL); }
-                    |   term TOKEN_DIV factor {   $$=newOpExpNode($1,$3,TOKEN_DIV); }
-                    |   term TOKEN_MOD factor {   $$=newOpExpNode($1,$3,TOKEN_MOD); }
-                    |   term TOKEN_AND factor {   $$=newOpExpNode($1,$3,TOKEN_AND); }
-                    |   factor {$$=$1;} ;
+term                :   term TOKEN_MUL factor {   
+                            $$=newOpExpNode($1,$3,TOKEN_MUL); 
+                        }
+                    |   term TOKEN_DIV factor {   
+                            $$=newOpExpNode($1,$3,TOKEN_DIV); 
+                        }
+                    |   term TOKEN_MOD factor {   
+                            $$=newOpExpNode($1,$3,TOKEN_MOD); 
+                        }
+                    |   term TOKEN_AND factor {   
+                            $$=newOpExpNode($1,$3,TOKEN_AND); 
+                        }
+                    |   factor {
+                            $$=$1;
+                        } 
+                    ;
 
 factor              :   ID
-                        {$$=$1;}
+                        {
+                            $$=$1;
+                        }
                     |   ID TOKEN_LP args_list TOKEN_RP
                         {   $$=newExpNode(EXP_FUNC_ID);
                             $$->attr.name=copyString($1->attr.name);
                             $$->child[0]=$3;
                         }
-                    |   const_value {$$=$1;}
-                    |   TOKEN_LP expression TOKEN_RP    {$$=$2;}
+                    |   const_value {
+                            $$=$1;
+                        }
+                    |   TOKEN_LP expression TOKEN_RP    {
+                            $$=$2;
+                        }
                     |   TOKEN_NOT factor
-                        {   $$=newOpExpNode($2,NULL,TOKEN_NOT);
+                        {   
+                            $$=newOpExpNode($2,NULL,TOKEN_NOT);
                         }
                     |   TOKEN_MINUS   factor
-                        {   $$=newOpExpNode($2,NULL,TOKEN_MINUS);
+                        {   
+                            $$=newOpExpNode($2,NULL,TOKEN_MINUS);
                         }
                     |   ID TOKEN_LB expression TOKEN_RB
                         {   $$=$1;
@@ -601,28 +728,36 @@ factor              :   ID
                             $$->type=EXPTYPE_RECORD;
                         }
                     |   TOKEN_ABS TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_ABS,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_ABS,$3);
                         }
                     |   TOKEN_CHR TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_CHR,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_CHR,$3);
                         }
                     |   TOKEN_ODD TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_ODD,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_ODD,$3);
                         }
                     |   TOKEN_ORD TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_ORD,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_ORD,$3);
                         }
                     |   TOKEN_PRED TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_PRED,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_PRED,$3);
                         }
                     |   TOKEN_SQR TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_SQR,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_SQR,$3);
                         }
                     |   TOKEN_SQRT TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_SQRT,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_SQRT,$3);
                         }
                     |   TOKEN_SUCC TOKEN_LP args_list TOKEN_RP
-                        {   $$=newFuncSysExpNode(TOKEN_SUCC,$3);
+                        {   
+                            $$=newFuncSysExpNode(TOKEN_SUCC,$3);
                         }
                     ;
 %%
