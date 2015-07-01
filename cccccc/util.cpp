@@ -1,5 +1,4 @@
 #include <iostream>
-#include "global.h"
 #include "util.h"
 #define ENDFILE 0
 

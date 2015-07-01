@@ -1,7 +1,7 @@
 #ifndef _SYMTAB_H_
 #define _SYMTAB_H_
 
-#include "global.h"
+#include "util.h"
 
 /*array/record lookup return type*/
 typedef struct LookupRetRec {

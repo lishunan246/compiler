@@ -1,6 +1,5 @@
 %{
 #define YYPARSER
-#include "global.h"
 #include "util.h"
 #define YYSTYPE TreeNode *
 static char * savedName;

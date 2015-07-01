@@ -1,4 +1,3 @@
-#include "global.h"
 #include "util.h"
 #include "CG.h"
 #include "symtab.h"
