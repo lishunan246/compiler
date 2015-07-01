@@ -1,4 +1,4 @@
-#include "symtab.h"
+#include "symbol_table.h"
 
 const int ERROR_RETURN = 0xffff;
 int currentNestLevel = 0;

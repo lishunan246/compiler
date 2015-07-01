@@ -2,7 +2,7 @@
 #define _ANALYZE_H_
 
 #include "util.h"
-#include "symtab.h"
+#include "symbol_table.h"
 
 #define OFFSET_INC 4
 

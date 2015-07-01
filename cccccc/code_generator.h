@@ -4,7 +4,7 @@
 #include "util.h"
 #include "y.tab.h"
 #include "analyze.h"
-#include "symtab.h"
+#include "symbol_table.h"
 
 
 #define CG_OUTPUT(asm) fprintf(codename, "%s", asm);

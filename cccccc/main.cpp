@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 amrzs. All rights reserved.
 //
 
-#include "util.h"
 #include "code_generator.h"
-#include "symtab.h"
+#include "symbol_table.h"
 #include "analyze.h"
+#include "util.h"
 #include <iostream>
 #include <string>
 using namespace std;
