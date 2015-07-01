@@ -134,7 +134,7 @@ void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* p
 
 
 VariableList varListLookup(char* name);
-FuncList funcListLookup(char* name);
+FuncList findFuncList(char* name);
 ProcList procListLookup(char* name);
 TypeList typeListLookup(char* name);
 LookupRet arrayLookup(char* a, int i);

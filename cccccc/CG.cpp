@@ -284,7 +284,7 @@ void CGPushParam(TreeNode* pnode){
 
 void CGExpFunc(TreeNode* pnode){
 
-	FuncList judge_var=funcListLookup(pnode->attr.name);
+	FuncList judge_var=findFuncList(pnode->attr.name);
 
 	CG_OUTPUT("push eax\n");  // push return value	
 
