@@ -241,6 +241,7 @@ int buildSymtab(TreeNode* syntaxTree) {
 	if(TraceAnalyze) {
 		printf( "\nSymbol table:\n\n");
 		printSymTab(stdout);
+        TraceAnalyze = false;
 	}
 	return -offset;
 }
