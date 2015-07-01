@@ -11,14 +11,14 @@
 #define ENDFILE 0
 #endif
 
-#ifndef False
-#define False 0
-#endif
+// #ifndef False
+// #define False 0
+// #endif
 
-#ifndef True
-#define True 1
-#endif
-
+// #ifndef True
+// #define True 1
+// #endif
+#define MAXCHILDREN 4
 #define MAXRESERVED 8
 typedef int TokenType;
 extern FILE* source;
@@ -26,6 +26,7 @@ extern FILE* listing;
 //extern FILE* code;
 
 extern int lineno;
+extern bool TraceScan;
 
 /*
 typedef enum{
@@ -75,7 +76,6 @@ typedef enum{
     TYPE_ARRAY, TYPE_RECORD
 }TypeKind;
 
-//
 typedef enum{
     EXPTYPE_VOID,EXPTYPE_INT,EXPTYPE_REAL,
     EXPTYPE_CHAR,EXPTYPE_STRING,EXPTYPE_BOOL,
@@ -83,7 +83,7 @@ typedef enum{
     EXPTYPE_SIMPLE_ID,EXPTYPE_SIMPLE_ENUM,EXPTYPE_SIMPLE_LIMIT
 }ExpType;
 
-#define MAXCHILDREN 4
+
 
 typedef struct treeNode{
     struct treeNode * child[MAXCHILDREN];
@@ -107,11 +107,5 @@ typedef struct treeNode{
     ExpType type;
     ExpType RuningType;
 }TreeNode;
-
-extern int TraceScan;
-
-
-
-
 
 #endif

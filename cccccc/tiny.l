@@ -89,7 +89,7 @@ string \".*\"
 "function"  {return TOKEN_FUNCTION;}
 "procedure" {return TOKEN_PROCEDURE;}
 {number}    {
-    printf("");
+    //printf("");
     return TOKEN_INT;
 }
 {real}      {return TOKEN_REAL;}
@@ -101,10 +101,10 @@ string \".*\"
 %%
 
 TokenType getToken(){
-    static int firstTime=True;
+    static bool firstTime=true;
     TokenType currentToken;
     if(firstTime){
-        firstTime = False;
+        firstTime = false;
         lineno++;
         yyin = source;
         yyout = listing;
