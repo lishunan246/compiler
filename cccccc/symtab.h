@@ -102,8 +102,17 @@ typedef struct ProcListRec {
 	struct ProcListRec* next;
 }* ProcList;
 
+void initScope();
+int enterNewScope(TreeNode* t);
+int leaveScope();
+void printSymbolTable();
+VariableList findVarList(char* name);
+FuncList findFuncList(char* name);
+ProcList findProcList(char* name);
+TypeList findTypeList(char* name);
+LookupRet findArray(char* a, int i);
+LookupRet findRecord(char* rec, char* a);
 
-static int hash (char* key);
 SubBoundDef newSubBoundDef(ExpType type, void* upper, void* lower);
 ArrayDef newArrayDef(ExpType arrayType, ExpType boundType, void* upper, void* lower);
 EnumDef newEnumDef(char* mark);
@@ -120,17 +129,5 @@ int funcListInsert(TreeNode* funcHead);
 void typeListAliaseInsert(char* name, char* aliase);
 void typeListInsert(char* name, ExpType type, int nestLevel, void* pAttr, int size);
 void varListInsert(char* name, ExpType type, int isConst, int nestLevel, void* pAttr, int lineno, int baseLoc, int offset);
-
-
-VariableList varListLookup(char* name);
-FuncList findFuncList(char* name);
-ProcList procListLookup(char* name);
-TypeList typeListLookup(char* name);
-LookupRet arrayLookup(char* a, int i);
-LookupRet recordLookup(char* rec, char* a);
-void initScope();
-int enterNewScope(TreeNode* t);
-int leaveScope();
-void printSymbolTable();
 
 #endif

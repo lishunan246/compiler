@@ -16,6 +16,46 @@ static std::map<std::string, ProcList> procMap;
 
 static int totalOffset[50];
 
+
+void printSymbolTable() {
+    printf("Symbol table --->>>\n>>>-------------------------------------\n");
+    printf("TTType\tname\tnest\tmem\tlineno\n");
+    
+    std::map<std::string, VariableList>::iterator itor1;
+    for (itor1 = variableMap.begin(); itor1 != variableMap.end(); itor1++) {
+        VariableList l = itor1->second;
+        while(l != NULL) {
+            LineList t = l->lines;
+            printf("%s\t", l->isConst ? "const" : "var");
+            printf("%s\t", l->name);
+            printf("%d\t", l->nestLevel);
+            printf("%d\t", l->memloc.offset);
+            while (t) {
+                printf("%d\t", t->lineno);
+                t = t->next;
+            }
+            printf("\n");
+            l = l->next;
+        }
+    }
+    
+    printf("TTType\tname\tnest\tret\tpara\n");
+    std::map<std::string, FuncList>::iterator itor;
+    for (itor = funcMap.begin(); itor != funcMap.end(); itor++) {
+        FuncList l = itor->second;
+        SimpleTypeList t = l->paraList;
+        printf("func\t");
+        printf("%s\t", l->name);
+        printf("%d\t", l->nestLevel);
+        printf("%d\t", l->retType);
+        while(t) {
+            printf("%s\t", t->name);
+            t = t->next;
+        }
+        printf("\n");
+    }
+}
+
 SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
 	SubBoundDef p = (SubBoundDef) malloc(sizeof(struct SubBoundDefRec));
 	p->boundType = type;
@@ -261,7 +301,7 @@ void varListInsert(char* name, ExpType type, int isConst, int nestLevel,
     }
 }
 
-VariableList varListLookup(char* name) {
+VariableList findVarList(char* name) {
     if (variableMap.find(std::string(name)) != variableMap.end()) {
         VariableList tmp = variableMap[std::string(name)];
         tmp->memloc.baseLoc = currentNestLevel - tmp->nestLevel;
@@ -277,14 +317,14 @@ FuncList findFuncList(char* name) {
     return NULL;
 }
 
-ProcList procListLookup(char* name) {
+ProcList findProcList(char* name) {
     if (procMap.count(std::string(name)) > 0) {
         return procMap[std::string(name)];
     }
     return NULL;
 }
 
-TypeList typeListLookup(char* name) {
+TypeList findTypeList(char* name) {
     if (typeMap.count(std::string(name)) > 0) {
         return typeMap[std::string(name)];
     }
@@ -292,13 +332,13 @@ TypeList typeListLookup(char* name) {
 
 }
 
-LookupRet arrayLookup(char* a, int i) {
-	int lower, upper, size;
+LookupRet findArray(char* a, int i) {
+	int lower, upper;
 	LookupRet ret;
 	ret.totalOff = ERROR_RETURN;
 	ret.jumpLevel = ERROR_RETURN;
 	ret.type = EXPTYPE_VOID;
-	VariableList l = varListLookup(a);
+	VariableList l = findVarList(a);
 	if(l->type == EXPTYPE_ARRAY && l->pAttr != NULL) {
 		lower = ((ArrayDef)(l->pAttr))->subBound->LowerBound.i;
 		upper = ((ArrayDef)(l->pAttr))->subBound->UpperBound.i;
@@ -311,8 +351,8 @@ LookupRet arrayLookup(char* a, int i) {
 	return ret;
 }
 
-LookupRet recordLookup(char* rec, char* a) {
-	VariableList l = varListLookup(rec);
+LookupRet findRecord(char* rec, char* a) {
+	VariableList l = findVarList(rec);
 	TypeList plist;
 	int size = 0;
 	LookupRet ret;
@@ -345,7 +385,7 @@ void initScope()
 
 int enterNewScope(TreeNode* t) {
 	currentNestLevel += 1;
-	totalOffset[currentNestLevel] = buildSymtab(t);
+	totalOffset[currentNestLevel] = buildSymtable(t);
 	return 	totalOffset[currentNestLevel];
 }
 
@@ -374,41 +414,3 @@ int leaveScope() {
 	return retValue;
 }
 
-void printSymbolTable() {
-    printf("Symbol table --->>>\n>>>-------------------------------------\n");
-    printf("TTType\tname\tnest\tmem\tlineno\n");
-
-    std::map<std::string, VariableList>::iterator itor1;
-    for (itor1 = variableMap.begin(); itor1 != variableMap.end(); itor1++) {
-        VariableList l = itor1->second;
-        while(l != NULL) {
-            LineList t = l->lines;
-            printf("%s\t", l->isConst ? "const" : "var");
-            printf("%s\t", l->name);
-            printf("%d\t", l->nestLevel);
-            printf("%d\t", l->memloc.offset);
-            while (t) {
-                printf("%d\t", t->lineno);
-                t = t->next;
-            }
-            printf("\n");
-            l = l->next;
-        }
-    }
-
-    printf("TTType\tname\tnest\tret\tpara\n");
-    std::map<std::string, FuncList>::iterator itor;
-    for (itor = funcMap.begin(); itor != funcMap.end(); itor++) {
-        FuncList l = itor->second;
-        SimpleTypeList t = l->paraList;
-        printf("func\t");
-        printf("%s\t", l->name);
-        printf("%d\t", l->nestLevel);
-        printf("%d\t", l->retType);
-        while(t) {
-            printf("%s\t", t->name);
-            t = t->next;
-        }
-        printf("\n");
-    }
-}
