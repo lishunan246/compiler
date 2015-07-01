@@ -59,7 +59,7 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_COMMA:   std::cout<<","<<std::endl;break;
         case TOKEN_COLON:   std::cout<<":"<<std::endl;break;
         case TOKEN_ASSIGN:   std::cout<<":="<<std::endl;break;
-        
+
 
         case TOKEN_INTEGER_TYPE:
         case TOKEN_BOOLEAN_TYPE:
@@ -95,11 +95,10 @@ void printToken(TokenType token, const char * tokenString){
 
 TreeNode * newDeclarationNode(DeclKind kind){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"***Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_DECLARE;
@@ -112,11 +111,10 @@ TreeNode * newDeclarationNode(DeclKind kind){
 
 TreeNode * newStmtNode(StmtKind kind){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_STATEMENT;
@@ -129,11 +127,10 @@ TreeNode * newStmtNode(StmtKind kind){
 
 TreeNode * newExpNode(ExpKind kind){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_EXPRESSION;
@@ -146,11 +143,10 @@ TreeNode * newExpNode(ExpKind kind){
 
 TreeNode * newOpExpNode(TreeNode * first, TreeNode * second, TokenType op){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_EXPRESSION;
@@ -166,11 +162,10 @@ TreeNode * newOpExpNode(TreeNode * first, TreeNode * second, TokenType op){
 
 TreeNode * newTypeNode(TypeKind type){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_TYPE;
@@ -182,11 +177,10 @@ TreeNode * newTypeNode(TypeKind type){
 
 TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
-    int i;
     if(t==NULL)
       std::cout<<"Out of memory error at line "<<lineno<<std::endl;
     else{
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
         t->sibling=NULL;
         t->nodekind=NODE_EXPRESSION;
@@ -200,8 +194,7 @@ TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args){
 }
 
 void freeNode(TreeNode *node){
-    int i;
-    for(i=0;i<MAXCHILDREN;i++)
+    for(int i=0;i<MAXCHILDREN;i++)
       free(node->child[i]);
     free(node->sibling);
     free(node);
@@ -222,19 +215,16 @@ char* copyString(char *s){
     return t;
 }
 
-//used for printTree
 static int indentno=0;
 #define INDENT indentno+=2
 #define UNINDENT indentno-=2
 
 static void printSpaces(void){
-    int i;
-    for(i=0;i<indentno;i++)
+    for(int i=0;i<indentno;i++)
       std::cout<<" ";
 }
 
 void printTree(TreeNode * tree){
-    int i;
     INDENT;
     while(tree!=NULL){
         printSpaces();
@@ -320,7 +310,7 @@ void printTree(TreeNode * tree){
             default: std::cout<<"Unknown node kind"<<std::endl; break;
         }
 
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           printTree(tree->child[i]);
         tree=tree->sibling;
     }
