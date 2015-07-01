@@ -68,7 +68,7 @@ typedef struct treeNode{
     struct treeNode * sibling;
     NodeKind nodekind;
     int lineno;
-    union{ 
+    union{
         StmtKind stmt;
         ExpKind exp;
         DeclKind decl;
