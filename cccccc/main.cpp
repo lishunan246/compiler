@@ -9,7 +9,7 @@ using namespace std;
 
 
 FILE * source;
-bool TraceScan = true;
+bool traceLine = true;
 int lineno=0;
 TreeNode * parse(void);
 

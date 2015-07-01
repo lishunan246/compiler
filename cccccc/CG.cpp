@@ -8,8 +8,8 @@ char tmp[200];
 
 
 void CGExpOp(TreeNode* pnode){
-
-	if (pnode->child[0]!=NULL && pnode->child[1]!=NULL){
+    
+	if (pnode->child[0]!=NULL && pnode->child[1]!=NULL) {
 		GenerateCode(pnode->child[0]);
 		CG_OUTPUT("push eax\n");
 	
@@ -142,7 +142,7 @@ void CGExpId(TreeNode* pnode){
 	LookupRet st_var;
 
 
-	VariableList ssvar=varListLookup(pnode->attr.name);
+	VariableList ssvar=findVarList(pnode->attr.name);
  	if (ssvar==NULL){
  		printf("Error in Line %d: Variable not existed.\n",pnode->lineno);
  		fflush(stdout);
@@ -152,7 +152,6 @@ void CGExpId(TreeNode* pnode){
 
 	if (cgtype==EXPTYPE_ARRAY){  // array type
 
-		
 		if (ssvar->pAttr==NULL){
  			printf("Error in Line %d: not an array.\n",pnode->lineno,pnode->attr.name);
  			fflush(stdout);
@@ -164,7 +163,7 @@ void CGExpId(TreeNode* pnode){
 
 	}
 	else if (cgtype==EXPTYPE_RECORD){ // record {int real bool char}
-		st_var=recordLookup(pnode->attr.name,(pnode->child[0])->attr.name);
+		st_var=findRecord(pnode->attr.name,(pnode->child[0])->attr.name);
 		level=st_var.jumpLevel;
 		offset=st_var.totalOff;
 	}
@@ -303,7 +302,7 @@ void CGExpFunc(TreeNode* pnode){
 
 void CGStmtProc(TreeNode* pnode){
 
-	ProcList judge_var=procListLookup(pnode->attr.name);
+	ProcList judge_var=findProcList(pnode->attr.name);
 
 	CGPushParam(pnode->child[0]);
 
@@ -326,7 +325,7 @@ void CGStmtAssign(TreeNode* pnode){
 
 		GenerateCode(pnode->child[1]);
 		CG_OUTPUT("push eax\n");
-		VariableList ssvar=varListLookup((pnode->child[0])->attr.name);
+		VariableList ssvar=findVarList((pnode->child[0])->attr.name);
 		if (ssvar->isConst){		
  			printf("Line %d, Error: The const variable %s can not be assigned.\n",pnode->lineno,(pnode->child[0])->attr.name);
  			fflush(stdout);	

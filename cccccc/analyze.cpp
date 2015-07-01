@@ -2,7 +2,24 @@
 
 extern int currentNestLevel;
 
-/*inserts identifiers stores in t into the symble table*/
+void traverseTree(TreeNode* t) {
+    if(t != NULL) {
+        int i;
+        for(i=0; i<4; i++)
+            insertNode(t->child[i]);
+    }
+}
+
+int buildSymtable(TreeNode* syntaxTree) {
+    offset = -4;
+    traverseTree(syntaxTree);
+    if(TraceAnalyze) {
+        printSymbolTable();
+        TraceAnalyze = false;
+    }
+    return -offset;
+}
+
 void insertNode(TreeNode* t) {
 	if(t == NULL) 
 		return;
@@ -26,7 +43,7 @@ void insertNode(TreeNode* t) {
 						switch(ptype->kind.type) {
 								case TYPE_SIMPLE_ID:
 								{
-									TypeList l = typeListLookup(ptype->attr.name);
+									TypeList l = findTypeList(ptype->attr.name);
 									switch(l->type) {
 										case EXPTYPE_ARRAY: 
 										{
@@ -217,30 +234,7 @@ void insertNode(TreeNode* t) {
 			default:
 				break;
 		}
-		
 	}
-
-}
-
-/*procedure traverse is a generic recursive syntax tree traversal routine*/
-void traverse(TreeNode* t) {
-	if(t != NULL) {
-		int i;
-		for(i=0; i<4; i++)
-			insertNode(t->child[i]);
-	}
-}
-
-
-/*constructs the symbol table by preorder traversal of the syntax tree*/
-int buildSymtab(TreeNode* syntaxTree) {
-	offset = -4;
-	traverse(syntaxTree);
-	if(TraceAnalyze) {
-		printSymbolTable();
-        TraceAnalyze = false;
-	}
-	return -offset;
 }
 
 static void typeError(TreeNode* t, char* message) {

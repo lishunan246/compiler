@@ -21,7 +21,7 @@ typedef int TokenType;
 extern FILE* source;
 
 extern int lineno;
-extern bool TraceScan;
+extern bool traceLine;
 extern char tokenString[MAXTOKENLEN+1];
 extern char previoustokenString[MAXTOKENLEN+1];
 
@@ -63,13 +63,12 @@ typedef enum{
 }ExpType;
 
 
-
 typedef struct treeNode{
     struct treeNode * child[MAXCHILDREN];
     struct treeNode * sibling;
     NodeKind nodekind;
     int lineno;
-    union{ 
+    union{
         StmtKind stmt;
         ExpKind exp;
         DeclKind decl;
@@ -89,10 +88,10 @@ typedef struct treeNode{
 
 void printToken(TokenType, const char *);
 
-TreeNode * newStmtNode(StmtKind s);
+TreeNode * newStatementNode(StmtKind s);
 
 TreeNode * newExpNode(ExpKind e);
-TreeNode * newOpExpNode(TreeNode*, TreeNode*,TokenType);
+TreeNode * newExpressionNode(TreeNode*, TreeNode*,TokenType);
 TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args);
 
 TreeNode * newDeclarationNode(DeclKind d);
