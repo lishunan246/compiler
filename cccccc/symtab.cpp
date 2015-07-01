@@ -13,10 +13,6 @@
 /*define size of the hash table*/
 #define SIZE 211
 
-
-/*define enum type max length*/
-#define ID_MAX_LEN 10
-
 int currentNestLevel = 0;
 
 /*the hash function*/
