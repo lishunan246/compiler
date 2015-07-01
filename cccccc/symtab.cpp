@@ -397,41 +397,41 @@ int leaveScope() {
 }
 
 // print symbol with some format
-void printSymTab(FILE* listing) {
-	fprintf(listing, "Variable Name		NestLevel 	Location 	Line Number\n");
-	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
+void printSymbolTable() {
+    printf("Symbol table --->>>\n>>>-------------------------------------\n");
+    printf("TTType\tname\tnest\tmem\tlineno\n");
     
     std::map<std::string, VariableList>::iterator itor1;
     for (itor1 = variableMap.begin(); itor1 != variableMap.end(); itor1++) {
         VariableList l = itor1->second;
         while(l != NULL) {
             LineList t = l->lines;
-            fprintf(listing, "%-14s ", l->name);
-            fprintf(listing, "%-8d", l->nestLevel);
-            fprintf(listing, "%-8d ", l->memloc.offset);
-            while(t != NULL) {
-                fprintf(listing, "%4d ", t->lineno);
+            printf("%s\t", l->isConst ? "const" : "var");
+            printf("%s\t", l->name);
+            printf("%d\t", l->nestLevel);
+            printf("%d\t", l->memloc.offset);
+            while (t) {
+                printf("%d\t", t->lineno);
                 t = t->next;
             }
-            fprintf(listing, "\n");
+            printf("\n");
             l = l->next;
         }
     }
-
-	fprintf(listing, "Function Name		NestLevel 	Return Type 	Parameter\n");
-	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
     
+    printf("TTType\tname\tnest\tret\tpara\n");
     std::map<std::string, FuncList>::iterator itor;
     for (itor = funcMap.begin(); itor != funcMap.end(); itor++) {
         FuncList l = itor->second;
         SimpleTypeList t = l->paraList;
-        fprintf(listing, "%-14s ", l->name);
-        fprintf(listing, "%-8d", l->nestLevel);
-        fprintf(listing, "%-8d ", l->retType);
-        while(t != NULL) {
-            fprintf(listing, "%-14s ", t->name);
+        printf("func\t");
+        printf("%s\t", l->name);
+        printf("%d\t", l->nestLevel);
+        printf("%d\t", l->retType);
+        while(t) {
+            printf("%s\t", t->name);
             t = t->next;
         }
-        fprintf(listing, "\n");
+        printf("\n");
     }
 }

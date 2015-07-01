@@ -144,7 +144,7 @@ LookupRet recordLookup(char* rec, char* a);
 void initScope();
 int enterNewScope(TreeNode* t);
 int leaveScope();
-void printSymTab(FILE* listing);
+void printSymbolTable();
 
 
 #endif
