@@ -145,8 +145,8 @@ TreeNode * newExpNode(ExpKind kind){
 TreeNode * newOpExpNode(TreeNode * first, TreeNode * second, TokenType op){
     TreeNode * t = (TreeNode *)malloc(sizeof(TreeNode));
     int i;
-    if(t==NULL)
-      printf("Out of memory error at line %d\n",lineno);
+    if(!t)
+      printf("Out of memory error at line %d\n", lineno);
     else{
         for(i=0;i<MAXCHILDREN;i++)
           t->child[i]=NULL;
@@ -211,7 +211,7 @@ char* copyString(char *s){
     char *t;
     if(s==NULL)
       return NULL;
-    n=strlen(s)+1;
+    n = (int)strlen(s)+1;
     t=(char*)malloc(n);
     if(t==NULL)
       printf("Out of memory error at line %d\n",lineno);
@@ -263,6 +263,9 @@ void printTree(TreeNode * tree){
                             case EXPTYPE_REAL: printf("const real:%lf\n",tree->attr.real_val); break;
                             case EXPTYPE_CHAR: printf("const char:%c\n",tree->attr.char_val); break;
                             case EXPTYPE_STRING: printf("const string:%s\n",tree->attr.string_val); break;
+                            default:
+                                printf("error type\n");
+                                break;
                         }
                         break;
                     case EXP_ID: printf("Exp ID: %s\n",tree->attr.name); break;
@@ -296,6 +299,9 @@ void printTree(TreeNode * tree){
                             case EXPTYPE_REAL:printf("type real\n");break;
                             case EXPTYPE_CHAR:printf("type char\n");break;
                             case EXPTYPE_BOOL:printf("type boolean\n");break;
+                            default:
+                                printf("error type");
+                                break;
                         }
                     break;
                     case TYPE_SIMPLE_ID: printf("type id\n"); break;
