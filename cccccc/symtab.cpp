@@ -27,14 +27,11 @@ static int hash (char* key) {
 	return temp;
 }
 
-/*===============定义符号表，分为变量、类型、函数、过程四个子表================*/
 
+// **** define symbols of var, type, func and proc
 
-
-/*the hash table of variables*/
-static VariableList variableHashTable[SIZE];
-
-static std::map<std::string,VariableList> variableMap;
+// symbol map of var and const
+static std::map<std::string, VariableList> variableMap;
 
 // symbol map of type define
 static std::map<std::string, TypeList> typeMap;
@@ -50,7 +47,7 @@ static int totalOffset[50];
 
 /*=========================定义对符号表的插入操作=================================*/
 
-/*build a p sub-bound type definition*/
+// sub-bound def
 SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
 	SubBoundDef p = (SubBoundDef) malloc(sizeof(struct SubBoundDefRec));
 	p->boundType = type;
@@ -64,11 +61,10 @@ SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
 		p->LowerBound.m = (char*)lower;
 		p->UpperBound.m = (char*)upper;
 	}
-
 	return p;
 }
 
-/*build a p array definition*/
+// array def
 ArrayDef newArrayDef(ExpType arrayType, ExpType boundType, void* lower, void* upper) {
 	ArrayDef p = (ArrayDef) malloc(sizeof(struct ArrayDefRec));
 	p->arrayType = arrayType;
@@ -77,7 +73,7 @@ ArrayDef newArrayDef(ExpType arrayType, ExpType boundType, void* lower, void* up
 	return p;
 }
 
-/*build a p enum definition*/
+// enum def
 EnumDef newEnumDef(char* mark) {
 	EnumDef p = (EnumDef) malloc(sizeof(struct EnumDefRec));
 	p->mark = mark;
@@ -94,7 +90,7 @@ EnumDef insertEnumDef(EnumDef enumList, char* mark) {
 	return enumList->next;
 }
 
-/*build a p type list node*/
+// new type list node
 TypeList newTypeDef(char* name, ExpType type, int nestLevel, void* pAttr, int size) {
 	TypeList p = (TypeList) malloc(sizeof(struct TypeListRec));
 	p->name = name;
@@ -115,7 +111,7 @@ TypeList insertTypeDef(TypeList typeList, char* name, ExpType type, int nestLeve
 	return typeList->next;
 }
 
-/*build a p record definition*/
+// record def
 RecordDef newDefinedRecord(TypeList ptr) {
 	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
 	p->type = DEFINED;
@@ -125,6 +121,7 @@ RecordDef newDefinedRecord(TypeList ptr) {
 	return p;
 }
 
+// anony record
 RecordDef newAnonyRecord(TypeList typeList) {
 	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
 	p->type = ANONYMOUS;
@@ -134,7 +131,7 @@ RecordDef newAnonyRecord(TypeList typeList) {
 	return p;
 }
 
-/*build a simple type list*/
+// simple type list def
 SimpleTypeList newSimpleTypeList(char* name, ExpType type, int isVar) {
 	SimpleTypeList p = (SimpleTypeList) malloc(sizeof(struct SimpleTypeListRec));
 	p->name = name;
@@ -152,7 +149,7 @@ SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpTy
 	return simpleList->next;
 }
 
-/*insert line numbers and memory location into the process hash table*/
+// proc line no and memory location
 int procListInsert(TreeNode* procHead) {
 
 	char* name = procHead->attr.name;
@@ -201,7 +198,8 @@ int procListInsert(TreeNode* procHead) {
 	return offset;
 }
 
-/*insert line numbers and memory location into the function hash table*/
+
+// func line no and memory location
 int funcListInsert(TreeNode* funcHead) {
 
 	char* name = funcHead->attr.name;
@@ -258,8 +256,7 @@ int funcListInsert(TreeNode* funcHead) {
 	return offset;
 }
 
-
-/*insert line numbers and memory location into the type hash table*/
+// type line no and memory location
 void typeListAliaseInsert(char* name, char* aliase) {
     if (typeMap.count(std::string(name)) > 0) {
         typeMap[std::string(name)]->aliaseSet->aliase = aliase;
@@ -281,55 +278,47 @@ void typeListInsert(char* name, ExpType type, int nestLevel,
     typeMap[std::string(name)] = tmpType;
 }
 
-/*insert line numbers and memory location into the variable hash table*/
+// var line no and memory location
 void varListInsert(char* name, ExpType type, int isConst, int nestLevel,
                    void* pAttr, int lineno, int baseLoc, int offset) {
-	int h = hash(name);
-	VariableList l = variableHashTable[h];
-	VariableList tmp = l;
-	while((tmp != NULL) && (strcmp(name, tmp->name)))
-			tmp = tmp->next;
-	if(tmp == NULL || (strcmp(name, tmp->name)==0 && nestLevel>tmp->nestLevel)) { /*process with same nestlevel not yet in the table, insert to the list head*/
-		tmp = (VariableList) malloc(sizeof(struct VariableListRec));
-		tmp->name = name;
-		tmp->type = type;
-		tmp->isConst = isConst;
-		tmp->nestLevel = nestLevel;
-		tmp->pAttr = pAttr;
-		tmp->lines = (LineList) malloc(sizeof(struct LineListRec));
-		tmp->lines->lineno = lineno;
-		tmp->lines->next = NULL;
-		tmp->memloc.baseLoc = baseLoc;
-		tmp->memloc.offset = offset;
-		tmp->next = (l == NULL)? NULL:l;
-		variableHashTable[h] = tmp;
-	} else { /*find the exact variable*/
-		LineList t = tmp->lines;
-		while(t->next != NULL)
-			t = t->next;
-		t->next = (LineList) malloc(sizeof(struct LineListRec));
-		t->next->lineno = lineno;
-		t->next->next = NULL;
-	}
+    VariableList l = (variableMap.count(std::string(name)) > 0)
+        ? variableMap[std::string(name)] : NULL;
+    VariableList tmp = l;
+    if(tmp == NULL || nestLevel > tmp->nestLevel) {
+        tmp = (VariableList) malloc(sizeof(struct VariableListRec));
+        tmp->name = name;
+        tmp->type = type;
+        tmp->isConst = isConst;
+        tmp->nestLevel = nestLevel;
+        tmp->pAttr = pAttr;
+        tmp->lines = (LineList) malloc(sizeof(struct LineListRec));
+        tmp->lines->lineno = lineno;
+        tmp->lines->next = NULL;
+        tmp->memloc.baseLoc = baseLoc;
+        tmp->memloc.offset = offset;
+        tmp->next = l;
+        variableMap[std::string(name)] = tmp;
+    } else {
+        LineList t = tmp->lines;
+        while(t->next != NULL)
+            t = t->next;
+        t->next = (LineList) malloc(sizeof(struct LineListRec));
+        t->next->lineno = lineno;
+        t->next->next = NULL;
+    }
+
 }
 
-/*=======================定义对符号表的查找操作=================================*/
-
-/*varListLookup returns the VariableList or null if not found*/
+// find something in symbol table
 VariableList varListLookup(char* name) {
-	int h = hash(name);
-	VariableList l = variableHashTable[h];
-	while((l != NULL) && (strcmp(name, l->name)))
-		l = l->next;
-	if(l == NULL)
-		return NULL;
-	else {
-		l->memloc.baseLoc = currentNestLevel - l->nestLevel;
-		return l;
-	}
+    if (variableMap.find(std::string(name)) != variableMap.end()) {
+        VariableList tmp = variableMap[std::string(name)];
+        tmp->memloc.baseLoc = currentNestLevel - tmp->nestLevel;
+        return tmp;
+    }
+    return NULL;
 }
 
-/*funcListLookup returns the FuncList of that name or null if not found*/
 FuncList funcListLookup(char* name) {
     if (funcMap.count(std::string(name)) > 0) {
         return funcMap[std::string(name)];
@@ -337,7 +326,6 @@ FuncList funcListLookup(char* name) {
     return NULL;
 }
 
-/*procListLookup returns the ProcList of that name or null if not found*/
 ProcList procListLookup(char* name) {
     if (procMap.count(std::string(name)) > 0) {
         return procMap[std::string(name)];
@@ -345,7 +333,6 @@ ProcList procListLookup(char* name) {
     return NULL;
 }
 
-/*typeListLookup returns the TypeList of that name or null if not found*/
 TypeList typeListLookup(char* name) {
     if (typeMap.count(std::string(name)) > 0) {
         return typeMap[std::string(name)];
@@ -354,7 +341,6 @@ TypeList typeListLookup(char* name) {
 
 }
 
-/*array Lookup*/
 LookupRet arrayLookup(char* a, int i) {
 	int lower, upper, size;
 	LookupRet ret;
@@ -374,7 +360,6 @@ LookupRet arrayLookup(char* a, int i) {
 	return ret;
 }
 
-/*recordLookup*/
 LookupRet recordLookup(char* rec, char* a) {
 	VariableList l = varListLookup(rec);
 	TypeList plist;
@@ -408,10 +393,6 @@ LookupRet recordLookup(char* rec, char* a) {
 /*initialize*/
 void initScope() {
 	currentNestLevel = -1;
-	int i;
-	for(i=0; i<SIZE; i++) {
-		variableHashTable[i] = NULL;
-	}
 }
 
 /*enter p function or process scope*/
@@ -427,51 +408,50 @@ int leaveScope() {
 	int retValue = totalOffset[currentNestLevel];
 	void* ptr1, *ptr2, *ptr3;
 	currentNestLevel -= 1;
-	int i;
-	for(i=0; i<SIZE; i++) {
-		VariableList vl = variableHashTable[i];
-
-		while(vl != NULL && vl->nestLevel >= tmp) {
-			ptr1 = (void*)vl;
-			vl = vl->next;
-			ptr2 = (void*)(((VariableList)ptr1)->lines);
-			while((LineList)ptr2 != NULL) {
-				ptr3 = (void*)(((LineList)ptr2)->next);
-				free((LineList)ptr2);
-				ptr2 = ptr3;
-			}
-			free((VariableList)ptr1);
-		}
-		variableHashTable[i] = vl;
-	}
+    
+    std::map<std::string, VariableList>::iterator itor;
+    for (itor = variableMap.begin(); itor != variableMap.end(); itor++) {
+        VariableList vl = itor->second;
+        while(vl != NULL && vl->nestLevel >= tmp) {
+            ptr1 = (void*)vl;
+            vl = vl->next;
+            ptr2 = (void*)(((VariableList)ptr1)->lines);
+            while((LineList)ptr2 != NULL) {
+                ptr3 = (void*)(((LineList)ptr2)->next);
+                free((LineList)ptr2);
+                ptr2 = ptr3;
+            }
+            free((VariableList)ptr1);
+        }
+        variableMap[itor->first] = vl;
+    }
 	return retValue;
 }
 
 
 /*=======================定义对符号表的打印操作=================================*/
 
-/*print symbol table*/
+// print symbol with some format
 void printSymTab(FILE* listing) {
-	int i;
 	fprintf(listing, "Variable Name		NestLevel 	Location 	Line Number\n");
 	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
-	for(i=0; i<SIZE; i++) {
-		if(variableHashTable[i] != NULL) {
-			VariableList l = variableHashTable[i];
-			while(l != NULL) {
-				LineList t = l->lines;
-				fprintf(listing, "%-14s ", l->name);
-				fprintf(listing, "%-8d", l->nestLevel);
-				fprintf(listing, "%-8d ", l->memloc.offset);
-				while(t != NULL) {
-					fprintf(listing, "%4d ", t->lineno);
-					t = t->next;
-				}
-				fprintf(listing, "\n");
-				l = l->next;
-			}
-		}
-	}
+    
+    std::map<std::string, VariableList>::iterator itor1;
+    for (itor1 = variableMap.begin(); itor1 != variableMap.end(); itor1++) {
+        VariableList l = itor1->second;
+        while(l != NULL) {
+            LineList t = l->lines;
+            fprintf(listing, "%-14s ", l->name);
+            fprintf(listing, "%-8d", l->nestLevel);
+            fprintf(listing, "%-8d ", l->memloc.offset);
+            while(t != NULL) {
+                fprintf(listing, "%4d ", t->lineno);
+                t = t->next;
+            }
+            fprintf(listing, "\n");
+            l = l->next;
+        }
+    }
 
 	fprintf(listing, "Function Name		NestLevel 	Return Type 	Parameter\n");
 	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
