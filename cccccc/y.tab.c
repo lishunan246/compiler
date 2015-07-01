@@ -237,7 +237,7 @@ static int yylex(){
 }
 
 int yyerror(char* message) {
-    fprintf(listing, "Syntax error at line %d: %s\n",lineno,message);
+    printf( "Syntax error at line %d: %s\n",lineno,message);
     return 0;
 }
 

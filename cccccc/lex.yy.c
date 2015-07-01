@@ -2375,19 +2375,19 @@ void yyfree (void * ptr )
 
 
 TokenType getToken(){
-    static int isFirst=True;
+    static bool isFirst=true;
     TokenType currentToken;
     if(isFirst){
-        isFirst = False;
+        isFirst = false;
         lineno++;
         yyin = source;
-        yyout = listing;
+        yyout = stdout;
     }
     currentToken = yylex();
     strncpy(previousTokenString,tokenString,MAXTOKENLEN);
     strncpy(tokenString,yytext,MAXTOKENLEN);
     if(TraceScan){
-        fprintf(listing,"\t%d--->",lineno);;
+        printf("\t%d: ",lineno);
         printToken(currentToken,tokenString);
     }
     return currentToken;
