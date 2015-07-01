@@ -1,12 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "symtab.h"
-#include "analyze.h"
-
-#include <iostream>
-#include <string>
-#include <map>
 
 const int ERROR_RETURN = 0xffff;
 int currentNestLevel = 0;
@@ -22,10 +14,8 @@ static std::map<std::string, TypeList> typeMap;
 static std::map<std::string, FuncList> funcMap;
 static std::map<std::string, ProcList> procMap;
 
-/*record the total offset of each scope*/
 static int totalOffset[50];
 
-// sub-bound def
 SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
 	SubBoundDef p = (SubBoundDef) malloc(sizeof(struct SubBoundDefRec));
 	p->boundType = type;
@@ -42,16 +32,13 @@ SubBoundDef newSubBoundDef(ExpType type, void* lower, void* upper) {
 	return p;
 }
 
-// array def
 ArrayDef newArrayDef(ExpType arrayType, ExpType boundType, void* lower, void* upper) {
 	ArrayDef p = (ArrayDef) malloc(sizeof(struct ArrayDefRec));
 	p->arrayType = arrayType;
 	p->subBound = newSubBoundDef(boundType, lower, upper);
-
 	return p;
 }
 
-// enum def
 EnumDef newEnumDef(char* mark) {
 	EnumDef p = (EnumDef) malloc(sizeof(struct EnumDefRec));
 	p->mark = mark;
@@ -68,7 +55,6 @@ EnumDef insertEnumDef(EnumDef enumList, char* mark) {
 	return enumList->next;
 }
 
-// new type list node
 TypeList newTypeDef(char* name, ExpType type, int nestLevel, void* pAttr, int size) {
 	TypeList p = (TypeList) malloc(sizeof(struct TypeListRec));
 	p->name = name;
@@ -89,7 +75,6 @@ TypeList insertTypeDef(TypeList typeList, char* name, ExpType type, int nestLeve
 	return typeList->next;
 }
 
-// record def
 RecordDef newDefinedRecord(TypeList ptr) {
 	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
 	p->type = DEFINED;
@@ -99,7 +84,6 @@ RecordDef newDefinedRecord(TypeList ptr) {
 	return p;
 }
 
-// anony record
 RecordDef newAnonyRecord(TypeList typeList) {
 	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
 	p->type = ANONYMOUS;
@@ -109,7 +93,6 @@ RecordDef newAnonyRecord(TypeList typeList) {
 	return p;
 }
 
-// simple type list def
 SimpleTypeList newSimpleTypeList(char* name, ExpType type, int isVar) {
 	SimpleTypeList p = (SimpleTypeList) malloc(sizeof(struct SimpleTypeListRec));
 	p->name = name;
@@ -127,7 +110,6 @@ SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpTy
 	return simpleList->next;
 }
 
-// proc line no and memory location
 int procListInsert(TreeNode* procHead) {
 
 	char* name = procHead->attr.name;
@@ -165,7 +147,7 @@ int procListInsert(TreeNode* procHead) {
 			tmpNode = tmpNode->sibling;
 		}
 	}
-    
+
     ProcList tmpProc = (ProcList)malloc(sizeof(struct ProcListRec));
     tmpProc->name = name;
     tmpProc->paraList = paraList;
@@ -176,8 +158,6 @@ int procListInsert(TreeNode* procHead) {
 	return offset;
 }
 
-
-// func line no and memory location
 int funcListInsert(TreeNode* funcHead) {
 
 	char* name = funcHead->attr.name;
@@ -195,10 +175,8 @@ int funcListInsert(TreeNode* funcHead) {
 		paraList = NULL;
 	else {
 	   	if(funcHead->child[0]->kind.decl == DECL_VAR_PARA) {
-			//若传递参数为实参
 			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, true);
 		} else {
-			//若传递参数为形参
 			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, false);
 		}
 		varListInsert(funcHead->child[0]->child[0]->attr.name,funcHead->child[0]->child[1]->type, false, paraNestLevel, NULL, funcHead->lineno, 0, offset);
@@ -219,10 +197,9 @@ int funcListInsert(TreeNode* funcHead) {
 		}
 	}
 
-	//符号表插入返回值,与函数同名
 	varListInsert(funcHead->attr.name, retType, false, paraNestLevel, NULL, funcHead->lineno, 0, offset);
 	offset = offset + OFFSET_INC;
-    
+
     FuncList tmpFunc = (FuncList) malloc(sizeof(struct FuncListRec));
     tmpFunc->name = name;
     tmpFunc->paraList = paraList;
@@ -230,11 +207,10 @@ int funcListInsert(TreeNode* funcHead) {
     tmpFunc->nestLevel = nestLevel;
     tmpFunc->next = NULL;
     funcMap[std::string(name)] = tmpFunc;
-    
+
 	return offset;
 }
 
-// type line no and memory location
 void typeListAliaseInsert(char* name, char* aliase) {
     if (typeMap.count(std::string(name)) > 0) {
         typeMap[std::string(name)]->aliaseSet->aliase = aliase;
@@ -256,7 +232,6 @@ void typeListInsert(char* name, ExpType type, int nestLevel,
     typeMap[std::string(name)] = tmpType;
 }
 
-// var line no and memory location
 void varListInsert(char* name, ExpType type, int isConst, int nestLevel,
                    void* pAttr, int lineno, int baseLoc, int offset) {
     VariableList l = (variableMap.count(std::string(name)) > 0)
@@ -284,10 +259,8 @@ void varListInsert(char* name, ExpType type, int isConst, int nestLevel,
         t->next->lineno = lineno;
         t->next->next = NULL;
     }
-
 }
 
-// find something in symbol table
 VariableList varListLookup(char* name) {
     if (variableMap.find(std::string(name)) != variableMap.end()) {
         VariableList tmp = variableMap[std::string(name)];
@@ -365,11 +338,8 @@ LookupRet recordLookup(char* rec, char* a) {
 	return ret;
 }
 
-
-
-// **** update symbol when step into func or proc
-
-void initScope() {
+void initScope()
+{
 	currentNestLevel = -1;
 }
 
@@ -384,7 +354,7 @@ int leaveScope() {
 	int retValue = totalOffset[currentNestLevel];
 	void* ptr1, *ptr2, *ptr3;
 	currentNestLevel -= 1;
-    
+
     std::map<std::string, VariableList>::iterator itor;
     for (itor = variableMap.begin(); itor != variableMap.end(); itor++) {
         VariableList vl = itor->second;
@@ -404,42 +374,41 @@ int leaveScope() {
 	return retValue;
 }
 
-// print symbol with some format
-void printSymTab(FILE* listing) {
-	fprintf(listing, "Variable Name		NestLevel 	Location 	Line Number\n");
-	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
-    
+void printSymbolTable() {
+    printf("Symbol table --->>>\n>>>-------------------------------------\n");
+    printf("TTType\tname\tnest\tmem\tlineno\n");
+
     std::map<std::string, VariableList>::iterator itor1;
     for (itor1 = variableMap.begin(); itor1 != variableMap.end(); itor1++) {
         VariableList l = itor1->second;
         while(l != NULL) {
             LineList t = l->lines;
-            fprintf(listing, "%-14s ", l->name);
-            fprintf(listing, "%-8d", l->nestLevel);
-            fprintf(listing, "%-8d ", l->memloc.offset);
-            while(t != NULL) {
-                fprintf(listing, "%4d ", t->lineno);
+            printf("%s\t", l->isConst ? "const" : "var");
+            printf("%s\t", l->name);
+            printf("%d\t", l->nestLevel);
+            printf("%d\t", l->memloc.offset);
+            while (t) {
+                printf("%d\t", t->lineno);
                 t = t->next;
             }
-            fprintf(listing, "\n");
+            printf("\n");
             l = l->next;
         }
     }
 
-	fprintf(listing, "Function Name		NestLevel 	Return Type 	Parameter\n");
-	fprintf(listing, "------------- 	---------	-------- 	-----------\n");
-    
+    printf("TTType\tname\tnest\tret\tpara\n");
     std::map<std::string, FuncList>::iterator itor;
     for (itor = funcMap.begin(); itor != funcMap.end(); itor++) {
         FuncList l = itor->second;
         SimpleTypeList t = l->paraList;
-        fprintf(listing, "%-14s ", l->name);
-        fprintf(listing, "%-8d", l->nestLevel);
-        fprintf(listing, "%-8d ", l->retType);
-        while(t != NULL) {
-            fprintf(listing, "%-14s ", t->name);
+        printf("func\t");
+        printf("%s\t", l->name);
+        printf("%d\t", l->nestLevel);
+        printf("%d\t", l->retType);
+        while(t) {
+            printf("%s\t", t->name);
             t = t->next;
         }
-        fprintf(listing, "\n");
+        printf("\n");
     }
 }

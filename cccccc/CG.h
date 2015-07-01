@@ -1,11 +1,14 @@
 #ifndef _CG_H_
 #define _CG_H_
 
-#include <stdio.h>
 #include "util.h"
 #include "y.tab.h"
 #include "analyze.h"
 #include "symtab.h"
+
+
+#define CG_OUTPUT(asm) fprintf(codename, "%s", asm);
+#define CG_OUTPUT_DATA(asm) fprintf(dataname, "%s", asm);
 
 int CG_main(TreeNode* pnode,char * ffname);
 
@@ -34,12 +37,9 @@ void CGStmtWhile(TreeNode* pnode);
 void CGStmtLabel(TreeNode* pnode);
 void CGStmtCase(TreeNode* pnode);
 
-
 void GStmtOutput(TreeNode* pnode);
 void GStmtInput(TreeNode* pnode);
 void CGNodeExpression(TreeNode* pnode);
 void GenerateCode(TreeNode* pnode);
-
-
 
 #endif

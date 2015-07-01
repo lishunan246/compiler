@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <string>
+#include <iostream>
+#include <map>
+
 
 #ifndef YYPARSER
 #include "y.tab.h"
@@ -20,9 +24,6 @@ extern int lineno;
 extern bool traceLine;
 extern char tokenString[MAXTOKENLEN+1];
 extern char previoustokenString[MAXTOKENLEN+1];
-
-//TokenType getToken();
-
 
 
 typedef enum{

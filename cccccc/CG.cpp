@@ -1,11 +1,4 @@
 #include "CG.h"
-#include "util.h"
-#include "analyze.h"
-#include "symtab.h"
-#include <string>
-
-#define CG_OUTPUT(asm) fprintf(codename, "%s", asm);
-#define CG_OUTPUT_DATA(asm) fprintf(dataname, "%s", asm);
 
 FILE* codename = NULL;
 FILE* dataname = NULL;
@@ -805,7 +798,8 @@ int CG_main(TreeNode* pnode,char * ffname){
 	CG_OUTPUT(".code\n");	
 	
 	initScope();
-	pnode->attr.name = "main";
+	char attrName[] = "main";
+	pnode->attr.name = attrName;
 	GenerateCode(pnode);
 	
 

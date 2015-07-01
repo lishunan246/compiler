@@ -1,4 +1,3 @@
-#include <iostream>
 #include "util.h"
 #define ENDFILE 0
 
@@ -59,7 +58,7 @@ void printToken(TokenType token, const char * tokenString){
         case TOKEN_COMMA:   std::cout<<","<<std::endl;break;
         case TOKEN_COLON:   std::cout<<":"<<std::endl;break;
         case TOKEN_ASSIGN:   std::cout<<":="<<std::endl;break;
-        
+
 
         case TOKEN_INTEGER_TYPE:
         case TOKEN_BOOLEAN_TYPE:
@@ -94,7 +93,6 @@ TreeNode * newDeclarationNode(DeclKind kind){
     if(t==NULL)
       std::cout<<"***Out of memory error at line "<<lineno<<std::endl;
     else{
-        
             while (i < MAXCHILDREN) {
                 t->child[i]=NULL;
                 t->sibling=NULL;
@@ -124,7 +122,6 @@ TreeNode * newStatementNode(StmtKind kind){
                 t->lineno=lineno;
                 i++;
             }
-        
     }
     return t;
 }
@@ -146,7 +143,6 @@ TreeNode * newExpNode(ExpKind kind){
                 t->type = EXPTYPE_VOID;
                 i++;
             }
-        
     }
     return t;
 }
@@ -168,7 +164,6 @@ TreeNode * newExpressionNode(TreeNode * first, TreeNode * second, TokenType op){
                 t->child[1]=second;
                 i++;
             }
-        
     }
     return t;
 
@@ -188,7 +183,6 @@ TreeNode * newTypeNode(TypeKind type){
             t->lineno=lineno;
             i++;
         }
-          
     }
     return t;
 }
@@ -210,7 +204,6 @@ TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args){
                 t->lineno=lineno;
                 i++;
             }
-        
     }
     return t;
 
@@ -240,6 +233,7 @@ char* copyString(char *s){
       strcpy(tmp,s);
     return tmp;
 }
+
 
 
 static int indentno=0;
@@ -411,7 +405,7 @@ void printTree(TreeNode * tree){
                 break;
         }
 
-        for(i=0;i<MAXCHILDREN;i++)
+        for(int i=0;i<MAXCHILDREN;i++)
           printTree(tree->child[i]);
         tree=tree->sibling;
     }
