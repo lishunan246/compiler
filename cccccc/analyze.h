@@ -1,3 +1,11 @@
+//
+//  analyze.h
+//  cccccc
+//
+//  Created by 王萌 on 15/6/20.
+//  Copyright (c) 2015年 wm. All rights reserved.
+//
+
 #ifndef _ANALYZE_H_
 #define _ANALYZE_H_
 
@@ -9,7 +17,6 @@
 //var memory location
 static int base = 0;
 static int offset = 0;
-
 static int TraceAnalyze = 1;
 static int Error = 0;
 

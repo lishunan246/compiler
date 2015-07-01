@@ -126,7 +126,7 @@ RecordDef newDefinedRecord(TypeList ptr) {
 
 RecordDef newAnonyRecord(TypeList typeList) {
 	RecordDef p = (RecordDef) malloc(sizeof(struct RecordNodeRec));
-	p->type = ANONYMOUS;
+	p->type = UNDEFINED;
 	p->ptr.pAnony = typeList;
 	p->next = NULL;
 
@@ -360,7 +360,7 @@ LookupRet findRecord(char* rec, char* a) {
 	ret.jumpLevel = ERROR_RETURN;
 	ret.type = EXPTYPE_VOID;
 	if(l->type == EXPTYPE_RECORD && l->pAttr != NULL) {
-		if(((RecordDef)(l->pAttr))->type == ANONYMOUS) {
+		if(((RecordDef)(l->pAttr))->type == UNDEFINED) {
 			plist = ((RecordDef)(l->pAttr))->ptr.pAnony;
 		} else {
 			plist = ((RecordDef)(l->pAttr))->ptr.pDef;

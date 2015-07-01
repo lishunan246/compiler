@@ -62,7 +62,6 @@ typedef enum{
     EXPTYPE_SIMPLE_ID,EXPTYPE_SIMPLE_ENUM,EXPTYPE_SIMPLE_LIMIT
 }ExpType;
 
-
 typedef struct treeNode{
     struct treeNode * child[MAXCHILDREN];
     struct treeNode * sibling;
@@ -87,22 +86,15 @@ typedef struct treeNode{
 }TreeNode;
 
 void printToken(TokenType, const char *);
-
 TreeNode * newStatementNode(StmtKind s);
-
 TreeNode * newExpNode(ExpKind e);
 TreeNode * newExpressionNode(TreeNode*, TreeNode*,TokenType);
 TreeNode * newFuncSysExpNode(TokenType op, TreeNode* args);
-
 TreeNode * newDeclarationNode(DeclKind d);
-
 TreeNode * newTypeNode(TypeKind type);
 
-
 void freeNode(TreeNode*);
-
 char * copyString(char*);
-
 void printTree(TreeNode *);
 
 #endif

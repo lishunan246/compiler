@@ -1,3 +1,11 @@
+//
+//  analyze.cpp
+//  cccccc
+//
+//  Created by 王萌 on 15/6/20.
+//  Copyright (c) 2015年 wm. All rights reserved.
+//
+
 #include "analyze.h"
 
 extern int currentNestLevel;
@@ -228,7 +236,8 @@ void insertNode(TreeNode* t) {
 			case DECL_FUNCTION:
 			{
 				funcListInsert(t->child[0]);
-		//		enterNewScope(t->child[1]);	
+		//		enterNewScope(t->child[1]);
+        //      funcListInsert(t->child[2]);
 				break;
 			} 
 			default:

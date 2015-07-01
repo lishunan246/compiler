@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-    CG_main(syntaxTree, asmFileName);
+    CGAsm(syntaxTree, asmFileName);
 
     return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef _SYMTAB_H_
-#define _SYMTAB_H_
+#ifndef _SYMBOL_TABLE_H_
+#define _SYMBOL_TABLE_H_
 
 #include "util.h"
 #include "analyze.h"
@@ -48,7 +48,7 @@ typedef struct EnumDefRec {
 	struct EnumDefRec* next;
 }* EnumDef;
 
-typedef enum {ANONYMOUS, DEFINED} RecordType;
+typedef enum {UNDEFINED, DEFINED} RecordType;
 
 typedef struct RecordNodeRec {
 	RecordType type;
@@ -123,6 +123,7 @@ RecordDef newDefinedRecord(TypeList ptr);
 RecordDef newAnonyRecord(TypeList typeList);
 SimpleTypeList newSimpleTypeList(char* name, ExpType type, int isVar);
 SimpleTypeList insertSimpleTypeList(SimpleTypeList simpleList, char* name, ExpType type, int isVar);
+
 
 int procListInsert(TreeNode* procHead);
 int funcListInsert(TreeNode* funcHead);
