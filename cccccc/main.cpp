@@ -1,7 +1,4 @@
-#include "global.h"
 #include "util.h"
-#include "scan.h"
-#include "parse.h"
 #include "CG.h"
 #include "symtab.h"
 #include "analyze.h"
@@ -13,6 +10,7 @@ char asmFileName[] = "out.asm";
 FILE * source;
 bool TraceScan = true;
 int lineno=0;
+TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
