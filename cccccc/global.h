@@ -11,13 +11,13 @@
 #define ENDFILE 0
 #endif
 
-#ifndef False
-#define False 0
-#endif
+// #ifndef False
+// #define False 0
+// #endif
 
-#ifndef True
-#define True 1
-#endif
+// #ifndef True
+// #define True 1
+// #endif
 #define MAXCHILDREN 4
 #define MAXRESERVED 8
 typedef int TokenType;
@@ -26,7 +26,7 @@ extern FILE* listing;
 //extern FILE* code;
 
 extern int lineno;
-extern int TraceScan;
+extern bool TraceScan;
 
 /*
 typedef enum{

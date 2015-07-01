@@ -101,10 +101,10 @@ string \".*\"
 %%
 
 TokenType getToken(){
-    static int firstTime=True;
+    static bool firstTime=true;
     TokenType currentToken;
     if(firstTime){
-        firstTime = False;
+        firstTime = false;
         lineno++;
         yyin = source;
         yyout = listing;

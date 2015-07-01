@@ -168,23 +168,23 @@ int procListInsert(TreeNode* procHead) {
 		paraList = NULL;
 	else {
 	   	if(procHead->child[0]->kind.decl == DECL_VAR_PARA) {
-			paraList = newSimpleTypeList(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, True);
+			paraList = newSimpleTypeList(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, true);
 		} else {
-			paraList = newSimpleTypeList(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, False);
+			paraList = newSimpleTypeList(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, false);
 		}
 
-		varListInsert(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, False, paraNestLevel, NULL, procHead->lineno, 0, offset);
+		varListInsert(procHead->child[0]->child[0]->attr.name, procHead->child[0]->child[1]->type, false, paraNestLevel, NULL, procHead->lineno, 0, offset);
 		offset = offset + OFFSET_INC;
 
 		tmpNode = procHead->child[0]->sibling;
 		tmpList = paraList;
 		while(tmpNode != NULL) {
 			if(tmpNode->kind.decl == DECL_VAR_PARA)
-				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, True);
+				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, true);
 			else
-				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False);
+				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, false);
 
-			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
+			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, false, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
 			offset = offset + OFFSET_INC;
 
 			tmpNode = tmpNode->sibling;
@@ -220,23 +220,23 @@ int funcListInsert(TreeNode* funcHead) {
 	else {
 	   	if(funcHead->child[0]->kind.decl == DECL_VAR_PARA) {
 			//若传递参数为实参
-			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, True);
+			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, true);
 		} else {
 			//若传递参数为形参
-			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, False);
+			paraList = newSimpleTypeList(funcHead->child[0]->child[0]->attr.name, funcHead->child[0]->child[1]->type, false);
 		}
-		varListInsert(funcHead->child[0]->child[0]->attr.name,funcHead->child[0]->child[1]->type, False, paraNestLevel, NULL, funcHead->lineno, 0, offset);
+		varListInsert(funcHead->child[0]->child[0]->attr.name,funcHead->child[0]->child[1]->type, false, paraNestLevel, NULL, funcHead->lineno, 0, offset);
 		offset = offset + OFFSET_INC;
 
 		tmpNode = funcHead->child[0]->sibling;
 		tmpList = paraList;
 		while(tmpNode != NULL) {
 			if(tmpNode->kind.decl == DECL_VAR_PARA)
-				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, True);
+				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, true);
 			else
-				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False);
+				tmpList = insertSimpleTypeList(tmpList, tmpNode->child[0]->attr.name, tmpNode->child[1]->type, false);
 
-			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, False, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
+			varListInsert(tmpNode->child[0]->attr.name, tmpNode->child[1]->type, false, paraNestLevel, NULL, tmpNode->lineno, 0, offset);
 			offset = offset + OFFSET_INC;
 
 			tmpNode = tmpNode->sibling;
@@ -244,7 +244,7 @@ int funcListInsert(TreeNode* funcHead) {
 	}
 
 	//符号表插入返回值,与函数同名
-	varListInsert(funcHead->attr.name, retType, False, paraNestLevel, NULL, funcHead->lineno, 0, offset);
+	varListInsert(funcHead->attr.name, retType, false, paraNestLevel, NULL, funcHead->lineno, 0, offset);
 	offset = offset + OFFSET_INC;
     
     FuncList tmpFunc = (FuncList) malloc(sizeof(struct FuncListRec));

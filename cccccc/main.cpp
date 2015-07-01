@@ -8,7 +8,7 @@
 char filename[30] = "test2";
 FILE * source ;
 FILE * listing ;
-int TraceScan = True;
+bool TraceScan = true;
 int lineno=0;
 
 int main(){
