@@ -11,41 +11,13 @@
 #define ENDFILE 0
 #endif
 
-// #ifndef False
-// #define False 0
-// #endif
-
-// #ifndef True
-// #define True 1
-// #endif
 #define MAXCHILDREN 4
 #define MAXRESERVED 8
 typedef int TokenType;
 extern FILE* source;
-extern FILE* listing;
-//extern FILE* code;
 
 extern int lineno;
 extern bool TraceScan;
-
-/*
-typedef enum{
-    // book-keeping
-    ENDFILE,ERROR,
-    //reserved
-    TOKEN_PROGRAM,
-    //
-    TOKEN_CONST,TOKEN_TYPE,TOKEN_VAR,
-    //reserved
-    IF,THEN,
-    //special symbol
-    EQUAL,PLUS,OR,LB,RB,SEMI,SPLIT,DOT,LP,RP,COMMA,COLON,
-    //type
-    INT,BOOL,TRUE,FALSE,ARRAY,OF,
-    //multicharacter tokens
-    ID,TOKEN_INT,TOKEN_REAL,TOKEN_CHAR,TOKEN_STRING
-}TokenType;
-*/
 
 typedef enum{
     NODE_STATEMENT, NODE_EXPRESSION, NODE_DECLARE, NODE_TYPE
