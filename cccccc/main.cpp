@@ -3,8 +3,10 @@
 #include "symtab.h"
 #include "analyze.h"
 #include <iostream>
-
+#include <string>
 using namespace std;
+
+
 
 FILE * source;
 bool TraceScan = true;
@@ -13,7 +15,9 @@ TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
-	char filename[30] = "test2";
+	char filename[] = "test2";
+	char asmFileName[] = "out.asm";
+	
 	if(argc==2)
 	{
 		cout<<"Opening: "<<argv[1]<<endl;
@@ -37,7 +41,8 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-	CG_main(syntaxTree, "out.asm");
+    
+    CG_main(syntaxTree, asmFileName);
 
     return 0;
 }

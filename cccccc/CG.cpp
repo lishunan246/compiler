@@ -2,6 +2,8 @@
 #include "util.h"
 #include "analyze.h"
 #include "symtab.h"
+#include <string>
+
 #define CG_OUTPUT(asm) fprintf(codename, "%s", asm);
 #define CG_OUTPUT_DATA(asm) fprintf(dataname, "%s", asm);
 
@@ -142,7 +144,7 @@ void CGExpId(TreeNode* pnode){
 	
 	int level;
 	int offset;
-	int lower;
+	int lower = 0;
 	ExpType cgtype;
 	LookupRet st_var;
 
@@ -181,7 +183,7 @@ void CGExpId(TreeNode* pnode){
 
 	if (cgtype==EXPTYPE_ARRAY){
 		CGNodeExpression(pnode->child[0]);
-		sprintf(tmp,"mov ebx, %d\n",lower);                 
+		sprintf(tmp,"mov ebx, %d\n", lower);
 		CG_OUTPUT(tmp);	
 
 		CG_OUTPUT("sub eax, ebx\n");
@@ -252,7 +254,9 @@ void CGExpConst(TreeNode* pnode){
         	sprintf(tmp,"mov eax, dword ptr[%s]; calculate real ExpConst \n",const_real_data);
         	CG_OUTPUT(tmp);
         	pnode->RuningType=EXPTYPE_REAL;
-			break;			
+			break;
+        default:
+            break;
 	}
 }
 
@@ -284,7 +288,7 @@ void CGPushParam(TreeNode* pnode){
 
 void CGExpFunc(TreeNode* pnode){
 
-	FuncList judge_var=funcListLookup(pnode->attr.name);
+	FuncList judge_var=findFuncList(pnode->attr.name);
 
 	CG_OUTPUT("push eax\n");  // push return value	
 
@@ -485,27 +489,21 @@ void CGStmtRepeat(TreeNode* pnode){
 	
 }
 
-
-
-
 void CGStmtFor(TreeNode* pnode){
 
 	char for_start[100], for_end[100];
-	int i;
 	strcpy(for_start, GetLabel());
 	strcpy(for_end, GetLabel());
 
-	//chuzhi
 	GenerateCode(pnode->child[1]);
 	CG_OUTPUT("push eax\n");
 	GenerateCode(pnode->child[0]);
 	CG_OUTPUT("pop eax\n");
-	//CG_OUTPUT("add esi, ecx\n");
 	CG_OUTPUT("mov [esi-0],eax  \n");
 
-	
-	//xunhuan
-	if(pnode->attr.op == TOKEN_TO){  //to
+    // cg loop
+	if(pnode->attr.op == TOKEN_TO){
+        // to
 		sprintf(tmp,"%s:\n",for_start);
 		CG_OUTPUT(tmp);	
 		GenerateCode(pnode->child[2]);
@@ -516,8 +514,7 @@ void CGStmtFor(TreeNode* pnode){
 		sprintf(tmp, "ja %s\n", for_end);
 		CG_OUTPUT(tmp);	
 
-		GenerateCode(pnode->child[3]);	
-
+		GenerateCode(pnode->child[3]);
 		GenerateCode(pnode->child[0]);
 		CG_OUTPUT("inc eax\n");
 		CG_OUTPUT("mov [esi-0],eax\n");	
@@ -528,6 +525,7 @@ void CGStmtFor(TreeNode* pnode){
 		CG_OUTPUT(tmp);	
 	}
 	 else {
+        // downto
 		sprintf(tmp,"%s:\n",for_start);
 		CG_OUTPUT(tmp);	
 		GenerateCode(pnode->child[2]);
@@ -538,8 +536,7 @@ void CGStmtFor(TreeNode* pnode){
 		sprintf(tmp, "jb %s\n", for_end);
 		CG_OUTPUT(tmp);	
 
-		GenerateCode(pnode->child[3]);	
-
+		GenerateCode(pnode->child[3]);
 		GenerateCode(pnode->child[0]);
 		CG_OUTPUT("dec eax\n");
 		CG_OUTPUT("mov [esi-0],eax\n");	
@@ -548,7 +545,7 @@ void CGStmtFor(TreeNode* pnode){
 		CG_OUTPUT(tmp);	
 		sprintf(tmp,"%s:\n",for_end);
 		CG_OUTPUT(tmp);	
-	 } //downto
+	 }
 }
 
 
@@ -559,7 +556,7 @@ void CGStmtIf(TreeNode* pnode){
 	strcpy(else_label, GetLabel());
 	strcpy(exit_label, GetLabel());
 	
-	//panduan
+	//if
 	GenerateCode(pnode->child[0]);
 	CG_OUTPUT("cmp eax, 1\n");	
 	sprintf(tmp, "je %s \njmp %s\n", if_label, else_label);
@@ -584,13 +581,7 @@ void CGStmtIf(TreeNode* pnode){
 }
 
 void GStmtOutput(TreeNode* pnode){
-
-	TreeNode *tt=NULL;
-	
-
-//	if (pnode->child[0]!=NULL)
-		tt=pnode->child[0];
-
+	TreeNode *tt = pnode->child[0];
 	while (tt!=NULL){
 		CGNodeExpression(tt);	
 
@@ -628,16 +619,12 @@ void GStmtOutput(TreeNode* pnode){
 
 
 void GStmtInput(TreeNode* pnode){
-
 	TreeNode *tt=NULL;
-
 	char output[100];
 	char output_all[100];
-	strcpy(output, "invoke crt_scanf, addr lb_read_");//	int_write,eax\n");
+	strcpy(output, "invoke crt_scanf, addr lb_read_");
 
-//	if (pnode->child[0]!=NULL)
 	tt=pnode->child[0];
-
 	while (tt!=NULL){
 		CGNodeExpression(tt);
 		
@@ -656,33 +643,29 @@ void GStmtInput(TreeNode* pnode){
 		CG_OUTPUT("mov [esi], eax\n");
 		tt=tt->sibling;
 	}
-	
 }
-
 
 
 void CGNodeExpression(TreeNode* pnode){
 	switch (pnode->kind.exp){
-				case EXP_ID:
-				//printf("EXP_ID\n");
-				//fflush(stdout);
-					CGExpId(pnode);
-					break;
-				case EXP_OP:
-				//printf("EXP_OP\n");
-				//fflush(stdout);
-					CGExpOp(pnode);
-					break;
-				case EXP_CONST:
-					CGExpConst(pnode);
-					break;
-				case EXP_CASE:
-					CGExpCase(pnode);
-					break;
-				case EXP_FUNC_ID:
-					CGExpFunc(pnode);
-					break;
-			}
+        case EXP_ID:
+            CGExpId(pnode);
+            break;
+        case EXP_OP:
+            CGExpOp(pnode);
+            break;
+        case EXP_CONST:
+            CGExpConst(pnode);
+            break;
+        case EXP_CASE:
+            CGExpCase(pnode);
+            break;
+        case EXP_FUNC_ID:
+            CGExpFunc(pnode);
+            break;
+        default:
+            break;
+    }
 }
 
 
@@ -690,12 +673,8 @@ void GenerateCode(TreeNode* pnode){
 	int size_param;
 	switch (pnode->nodekind){
 		case NODE_STATEMENT:
-			//printf("NODE_STATEMENT\n");
-			//fflush(stdout);
 			switch (pnode->kind.stmt){
 				case STMT_ASSIGN:
-					//printf("STMT_ASSIGN\n");
-					//fflush(stdout);
 					CGStmtAssign(pnode);
 					break;
 				case STMT_IF:
@@ -741,16 +720,11 @@ void GenerateCode(TreeNode* pnode){
 			}
 			break;
 		case NODE_EXPRESSION:
-				//printf("NODE_EXPRESSION\n");
-				//fflush(stdout);
 				CGNodeExpression(pnode);
 			break;
 		case NODE_DECLARE:
 			switch (pnode->kind.decl){
 				case DECL_ROUTINEHEAD:
-					//printf("DECL_ROUTINEHEAD\n");
-					//fflush(stdout);
-
 					size_param=enterNewScope(pnode);
 
 					if (pnode->child[3]!=NULL)
@@ -764,45 +738,34 @@ void GenerateCode(TreeNode* pnode){
 						CG_OUTPUT("main PROC\n");
 						CG_OUTPUT("mov ecx, esp\n");
 					}
-
   					sprintf(tmp, "sub esp, %d\n", size_param);
-  					CG_OUTPUT(tmp);		
-
-
+  					CG_OUTPUT(tmp);
   					break;
 				case DECL_FUNCTION:
-
-					//printf("DECL_FUNCTION\n");
-					//fflush(stdout);
-					
-					funcListInsert(pnode->child[0]);  // give congjie function_head!!!!!!!!!!!!!
-
+					funcListInsert(pnode->child[0]);
 					(pnode->child[1])->attr.name=(pnode->child[0])->attr.name;
-					GenerateCode(pnode->child[1]); //routine_head 
-	
+					GenerateCode(pnode->child[1]);
+                    //routine_head
 					
 					size_param=leaveScope();
 					sprintf(tmp, "add esp, %d\n", size_param);
   					CG_OUTPUT(tmp);	
-					CG_OUTPUT("ret\n");	
-
+					CG_OUTPUT("ret\n");
 					break;
     			case DECL_PROCEDURE:
-	
-					//printf("DECL_PROCEDURE\n");
 					fflush(stdout);
-					
-					procListInsert(pnode->child[0]);  // give congjie function_head!!!!!!!!!!!!!
-
+					procListInsert(pnode->child[0]);
 					(pnode->child[1])->attr.name=(pnode->child[0])->attr.name;
-					GenerateCode(pnode->child[1]); //routine_head 
+					GenerateCode(pnode->child[1]);
+                    //routine_head
 				
 					size_param=leaveScope();
 					sprintf(tmp, "add esp, %d\n", size_param);
   					CG_OUTPUT(tmp);	
-					CG_OUTPUT("ret\n");	
-
+					CG_OUTPUT("ret\n");
 					break;
+                default:
+                    break;
 			}
 			break;
 		case NODE_TYPE:
@@ -821,13 +784,6 @@ int CG_main(TreeNode* pnode,char * ffname){
 
 	codename = fopen("code_part.asm", "w");
 	dataname = fopen("data_part.asm", "w");
-/*	
-CG_OUTPUT("section .data\n");
-CG_OUTPUT("\tintformat db \"%d\",0xa,0\n");     
-CG_OUTPUT("section .text\n");
-CG_OUTPUT("\tglobal main\n");
-CG_OUTPUT("main:\n");
-*/
 	
 	CG_OUTPUT_DATA(".386\n");
 	CG_OUTPUT_DATA(".model flat,stdcall\n");
@@ -849,11 +805,11 @@ CG_OUTPUT("main:\n");
 	CG_OUTPUT(".code\n");	
 	
 	initScope();
-	pnode->attr.name="main";
+	pnode->attr.name = "main";
 	GenerateCode(pnode);
 	
 
-	size_param=leaveScope();  //li kai zhu yu shi
+	size_param=leaveScope();
 	sprintf(tmp, "add esp, %d\n", size_param);
   	CG_OUTPUT(tmp);	
 	CG_OUTPUT("main ENDP\n");
