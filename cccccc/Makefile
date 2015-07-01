@@ -7,3 +7,4 @@ clean :
 	rm a.*
 	rm y.tab.*
 	rm lex.*
+	rm *.asm

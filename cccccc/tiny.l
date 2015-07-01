@@ -89,7 +89,7 @@ string \".*\"
 "function"  {return TOKEN_FUNCTION;}
 "procedure" {return TOKEN_PROCEDURE;}
 {number}    {
-    printf("");
+    //printf("");
     return TOKEN_INT;
 }
 {real}      {return TOKEN_REAL;}
