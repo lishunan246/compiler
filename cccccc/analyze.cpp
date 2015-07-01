@@ -1,5 +1,3 @@
-#include "util.h"
-#include "symtab.h"
 #include "analyze.h"
 
 extern int currentNestLevel;

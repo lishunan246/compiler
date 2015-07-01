@@ -1,6 +1,9 @@
 #ifndef _ANALYZE_H_
 #define _ANALYZE_H_
 
+#include "util.h"
+#include "symtab.h"
+
 #define OFFSET_INC 4
 
 

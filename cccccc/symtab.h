@@ -2,6 +2,8 @@
 #define _SYMTAB_H_
 
 #include "util.h"
+#include "analyze.h"
+
 
 /*array/record lookup return type*/
 typedef struct LookupRetRec {
