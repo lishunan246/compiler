@@ -12,6 +12,7 @@ char filename[30] = "test2";
 FILE * source;
 bool TraceScan = true;
 int lineno=0;
+TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {

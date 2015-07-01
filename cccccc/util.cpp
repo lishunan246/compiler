@@ -1,6 +1,7 @@
 #include <iostream>
 #include "global.h"
 #include "util.h"
+#define ENDFILE 0
 
 void printToken(TokenType token, const char * tokenString){
     switch(token){

@@ -8,7 +8,6 @@
 
 #ifndef YYPARSER
 #include "y.tab.h"
-#define ENDFILE 0
 #endif
 
 #define MAXCHILDREN 4
@@ -18,6 +17,8 @@ extern FILE* source;
 
 extern int lineno;
 extern bool TraceScan;
+
+
 
 typedef enum{
     NODE_STATEMENT, NODE_EXPRESSION, NODE_DECLARE, NODE_TYPE
