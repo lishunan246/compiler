@@ -1,23 +1,29 @@
-#include "util.h"
-#include "CG.h"
-#include "symtab.h"
+//
+//  main.cpp
+//  cccccc
+//
+//  Created by 张鹏程 on 15/6/20.
+//  Copyright (c) 2015年 amrzs. All rights reserved.
+//
+
+#include "code_generator.h"
+#include "symbol_table.h"
 #include "analyze.h"
+#include "util.h"
 #include <iostream>
 #include <string>
 using namespace std;
 
-
-
 FILE * source;
-bool TraceScan = true;
+bool traceLine = true;
 int lineno=0;
 TreeNode * parse(void);
 
 int main(int argc, char const *argv[])
 {
-	char filename[] = "test2";
+	char filename[] = "test.pas";
 	char asmFileName[] = "out.asm";
-	
+
 	if(argc==2)
 	{
 		cout<<"Opening: "<<argv[1]<<endl;
@@ -30,7 +36,7 @@ int main(int argc, char const *argv[])
 	}
 	else if(argc==1)
 	{
-		source = fopen(filename,"r");		
+		source = fopen(filename,"r");
 	}
 	else
 	{
@@ -41,8 +47,7 @@ int main(int argc, char const *argv[])
     TreeNode * syntaxTree;
     syntaxTree = parse();
     printTree(syntaxTree);
-    
-    CG_main(syntaxTree, asmFileName);
+    CGAsm(syntaxTree, asmFileName);
 
     return 0;
 }
